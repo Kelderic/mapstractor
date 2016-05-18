@@ -9,16 +9,15 @@
 			init: function() {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
-				// Set up constants that multiple sub functions will need.
-				var mapElement = document.getElementById(self.opts.mapID);
-				self.gMap = new google.maps.Map(mapElement, self.opts.map);
+				// Set up global variables
+				self.mapWrap = document.getElementById(self.opts.mapWrap);
+				self.gMap = new google.maps.Map(self._createMapElement(), self.opts.map);
 				self.markers = [];
 				self.polygons = [];
 				self.searchInputElement = null;
 				self.directClick = 1;
 				self.clickingTimout = null;
-				mapElement.style.height = '100%';
-				// Call any functions that are required on page load.
+				// Call initiation functions.
 				self._createUIWrappers();
 				self._createOverlay();
 				// Add listeners to the map object.
@@ -179,10 +178,18 @@
 				}
 				return marker;
 			},
+			_createMapElement: function() {
+				// Store this as self, so that it is accessible in sub-functions.
+				var self = this;
+				// Create html
+				var element = document.createElement('div');
+					element.style.height = '100%';
+				self.mapWrap.appendChild(element);
+				return element;
+			},
 			_createOverlay: function() {
 				var self = this;
 				// Create HTML elements
-				var wrapper = document.getElementById('map-wrap');
 				var overlayHTML = document.createElement('div');
 				var faderHTML = document.createElement('svg');
 				var loaderHTML = document.createElement('div');
@@ -196,7 +203,10 @@
 				overlayHTML.appendChild(faderHTML);
 				overlayHTML.appendChild(loaderHTML);
 				overlayHTML.appendChild(spanHTML);
-				document.body.insertBefore(overlayHTML, document.body.firstChild);
+				// Confirm that the map wrapper is relatively positioned to contain the overlay, just in case it's not already.
+				self.mapWrap.style.position = 'relative';
+				// Insert the overlay element.
+				self.mapWrap.insertBefore(overlayHTML, self.mapWrap.firstElementChild);
 				self.overlay = document.getElementById("overlay");
 			},
 			_createUIWrappers: function() {
@@ -214,11 +224,12 @@
 				self.gMap.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(self._createUIWrapper('controls right'));
 			},
 			_createUIWrapper(className) {
+				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
+				// Create html
 				var element = document.createElement('div');
 					element.className = className;
-				var mapWrap = document.getElementById(self.opts.mapWrap);
-				mapWrap.appendChild(element);
+				self.mapWrap.appendChild(element);
 				return element;
 			},
 			_createSearchInput: function(location) {

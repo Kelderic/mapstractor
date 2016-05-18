@@ -1,6 +1,6 @@
 (function(window, google) {
 
-	var Mapstractor = (function() {
+	window.Mapstractor = (function() {
 		function Mapstractor(opts) {
 			this.opts = opts;
 			this.init();
@@ -14,7 +14,7 @@
 				self.gMap = new google.maps.Map(mapElement, self.opts.map);
 				self.markers = [];
 				self.polygons = [];
-				self.searchBoxID = null;
+				self.searchInputElement = null;
 				self.directClick = 1;
 				self.clickingTimout = null;
 				mapElement.style.height = '100%';
@@ -73,68 +73,22 @@
 				});
 				self.polygons.push(polygon);
 			},
-			setupSearchbox: function(boxID,buttonID) {
+			addSearchbox: function(location) {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
-				// Get elements for the search box input and the manual triggering search button.
-				var searchBoxElement = document.getElementById(boxID);
-				var searchButtonElement = document.getElementById(buttonID);
-				// Store ID so that other functions can access it.
-				self.searchBoxID = boxID;
-				// Set options for autoComplete. We are just allowing regions (cities, states, zip codes, etc) in the United States.
-				var options = {types: ['(regions)'], componentRestrictions: {country: "us"} };
-				// Create official searchbox and search button API constructs.
-				var searchBox = new google.maps.places.Autocomplete(searchBoxElement, options);
-				//Set up places service for autoComplete.
-				var places = new google.maps.places.PlacesService(self.gMap);
-
-				// Trigger action when map is moved.
-				self.gMap.addListener('bounds_changed', function() {
-					searchBox.setBounds(self.gMap.getBounds());
-				});
-
-				// Trigger action when a search is begun (clicking the search button)
-				searchButtonElement.addEventListener("click", function(event) {
-					self.searchAsync(searchBoxElement);
-				});
-				// Trigger action when a search is begun (clicking an option from Autocomplete suggestions)
-				searchBox.addListener('place_changed', function() {
-					if ( !self.searchSync(searchBox) ) {
-						self.searchAsync(searchBoxElement);
-					}
-				});
+				// Create the html button element.
+				var searchInputElement = self._createSearchInput(location);
+				var searchButtonElement = self._createSearchButton(location);
+				//Setup the button as a Google maps element.
+				self._setupSearchbox(searchInputElement,searchButtonElement);
 			},
-			setupShareLocation: function(buttonID) {
+			addShareLocationButton: function(location) {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
-				var timeout;
-				// Get elements for the search box input and the manual triggering search button.
-				var shareLocationButtonElement = document.getElementById(buttonID);
-				var searchBoxElement = document.getElementById(self.searchBoxID);
-				// Trigger action when a share location button is clicked.
-				shareLocationButtonElement.addEventListener("click", function(event) {
-					self.overlay.className = "loading";
-					self.overlay.getElementsByTagName('span')[0].textContent = "Getting your location...";
-					timeout = setTimeout(function() {
-						self.overlay.className = "";
-					}, 15000);
-					navigator.geolocation.getCurrentPosition(function(position){
-						var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-						var geocoder = new google.maps.Geocoder();
-						geocoder.geocode({"location":location }, function(results, status) {
-							if (status == google.maps.GeocoderStatus.OK) {
-								self.overlay.className = "";
-								clearTimeout(timeout);
-								var place = results[0]; place.name = place.address_components[0].long_name;
-								searchBoxElement.value = place.formatted_address;
-								shareLocationButtonElement.className = shareLocationButtonElement.className + " active"
-								self.checkAgainstAreas(place);
-							}
-						});
-					}, function() {
-						self.overlay.className = "";
-					});
-				});
+				// Create the html button element.
+				var shareLocationButtonElement = self._createShareLocationButton(location);
+				//Setup the button as a Google maps element.
+				self._setupShareLocationButton(shareLocationButtonElement);
 			},
 			searchSync: function(searchBox) {
 				var self = this;
@@ -228,6 +182,7 @@
 			_createOverlay: function() {
 				var self = this;
 				// Create HTML elements
+				var wrapper = document.getElementById('map-wrap');
 				var overlayHTML = document.createElement('div');
 				var faderHTML = document.createElement('svg');
 				var loaderHTML = document.createElement('div');
@@ -246,34 +201,120 @@
 			},
 			_positionUI: function() {
 				var self = this;
-				var uiWrappers = {
-					topLeft: '.controls.top-left',
-					topRight: '.controls.top-right',
-					bottomLeft: '.controls.bottom-left',
-					bottomRight: '.controls.bottom-right',
-				};
 				
-				if (self.opts.uiWrappers) {
-					if (self.opts.uiWrappers.topLeft) {uiWrappers.topLeft = self.opts.uiWrappers.topLeft;}
-					if (self.opts.uiWrappers.topRight) {uiWrappers.topRight = self.opts.uiWrappers.topRight;}
-					if (self.opts.uiWrappers.bottomLeft) {uiWrappers.bottomLeft = self.opts.uiWrappers.bottomLeft;}
-					if (self.opts.uiWrappers.bottomRight) {uiWrappers.bottomRight = self.opts.uiWrappers.bottomRight;}
-				}
-				
-				var topLeftElement = document.querySelectorAll(uiWrappers.topLeft);
-				var topRightElement = document.querySelectorAll(uiWrappers.topRight);
-				var bottomLeftElement = document.querySelectorAll(uiWrappers.bottomLeft);
-				var bottomLightElement = document.querySelectorAll(uiWrappers.bottomRight);
-				
-				if (topLeftElement) { self.gMap.controls[google.maps.ControlPosition.TOP_LEFT].push(topLeftElement[0]); }
-				if (topRightElement) { self.gMap.controls[google.maps.ControlPosition.TOP_RIGHT].push(topRightElement[0]); }
-				if (bottomLeftElement) { self.gMap.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(bottomLeftElement[0]); }
-				if (bottomLightElement) { self.gMap.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(bottomLightElement[0]); }
+				self.gMap.controls[google.maps.ControlPosition.TOP_LEFT].push(self._createUIWrapper('controls top-left'));
+				self.gMap.controls[google.maps.ControlPosition.LEFT_TOP].push(self._createUIWrapper('controls top-left'));
+
+				self.gMap.controls[google.maps.ControlPosition.TOP_RIGHT].push(self._createUIWrapper('controls top-right'));
+				self.gMap.controls[google.maps.ControlPosition.RIGHT_TOP].push(self._createUIWrapper('controls top-right'));
+
+				self.gMap.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(self._createUIWrapper('controls bottom-left'));
+				self.gMap.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(self._createUIWrapper('controls bottom-left'));
+
+				self.gMap.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(self._createUIWrapper('controls bottom-right'));
+				self.gMap.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(self._createUIWrapper('controls bottom-right'));
+
+			},
+			_createUIWrapper(className) {
+				var self = this;
+				var element = document.createElement('div');
+					element.className = className;
+				var mapWrap = document.getElementById(self.opts.mapWrap);
+				mapWrap.appendChild(element);
+				return element;
+			},
+			_createSearchInput: function(location) {
+				// Store this as self, so that it is accessible in sub-functions.
+				var self = this;
+				// Create html
+				var searchInputElement = document.createElement('input');
+					searchInputElement.id = 'searchinput';
+					searchInputElement.type = 'text';
+					searchInputElement.placeholder = 'Search for City, State, or Zip Code...';
+				self.gMap.controls[google.maps.ControlPosition[location]].j[0].appendChild(searchInputElement);
+				return searchInputElement;
+			},
+			_createSearchButton: function(location) {
+				// Store this as self, so that it is accessible in sub-functions.
+				var self = this;
+				// Create html
+				var searchButtonElement = document.createElement('button');
+					searchButtonElement.id = 'searchbutton';
+					searchButtonElement.innerHTML = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 485.213 485.213"><path d="M471.882,407.567L360.567,296.243c-16.586,25.795-38.536,47.734-64.331,64.321l111.324,111.324 c17.772,17.768,46.587,17.768,64.321,0C489.654,454.149,489.654,425.334,471.882,407.567z"/><path d="M363.909,181.955C363.909,81.473,282.44,0,181.956,0C81.474,0,0.001,81.473,0.001,181.955s81.473,181.951,181.955,181.951 C282.44,363.906,363.909,282.437,363.909,181.955z M181.956,318.416c-75.252,0-136.465-61.208-136.465-136.46 c0-75.252,61.213-136.465,136.465-136.465c75.25,0,136.468,61.213,136.468,136.465 C318.424,257.208,257.206,318.416,181.956,318.416z"/><path d="M75.817,181.955h30.322c0-41.803,34.014-75.814,75.816-75.814V75.816C123.438,75.816,75.817,123.437,75.817,181.955z"/></svg>';
+
+				self.gMap.controls[google.maps.ControlPosition[location]].j[0].appendChild(searchButtonElement);
+				return searchButtonElement;
+
+			},
+			_createShareLocationButton: function(location) {
+				// Store this as self, so that it is accessible in sub-functions.
+				var self = this;
+				// Create html
+				var shareLocationButtonElement = document.createElement('button');
+					shareLocationButtonElement.innerHTML = '<svg baseProfile="full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M12 54 L0 54 L0 46 L 12 46 A 40 40, 0, 0, 1, 46 12 L 46 0 L 54 0 L 54 12 A 40 40, 0, 0, 1, 88 46 L 100 46 L 100 54 L 88 54 A 40 40, 0, 0, 1, 54 88 L 54 100 L 46 100 L 46 88 A 40 40, 0, 0, 1, 12 54 L 20 50 A 30 30, 0, 0, 0, 80 50 A 30 30, 0, 0, 0, 20 50 Z" /><path d="M28 50 A 22 22, 0, 0, 0, 72 50 A 22 22, 0, 0, 0, 28 50 Z" /></svg>';
+				self.gMap.controls[google.maps.ControlPosition[location]].j[0].appendChild(shareLocationButtonElement);
+				return shareLocationButtonElement;
+			},
+			_setupShareLocationButton: function(shareLocationButtonElement) {
+				// Store this as self, so that it is accessible in sub-functions.
+				var self = this;
+				var timeout;
+				// Trigger action when a share location button is clicked.
+				shareLocationButtonElement.addEventListener("click", function(event) {
+					self.overlay.className = "loading";
+					self.overlay.getElementsByTagName('span')[0].textContent = "Getting your location...";
+					timeout = setTimeout(function() {
+						self.overlay.className = "";
+					}, 15000);
+					navigator.geolocation.getCurrentPosition(function(position){
+						var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+						var geocoder = new google.maps.Geocoder();
+						geocoder.geocode({"location":location }, function(results, status) {
+							if (status == google.maps.GeocoderStatus.OK) {
+								self.overlay.className = "";
+								clearTimeout(timeout);
+								var place = results[0]; place.name = place.address_components[0].long_name;
+								self.searchInputElement.value = place.formatted_address;
+								shareLocationButtonElement.className = shareLocationButtonElement.className + " active"
+								self.checkAgainstAreas(place);
+							}
+						});
+					}, function() {
+						self.overlay.className = "";
+					});
+				});
+			},
+			_setupSearchbox: function(searchInputElement,searchButtonElement) {
+				// Store this as self, so that it is accessible in sub-functions.
+				var self = this;
+				// Store Search Input so that other functions can access it.
+				self.searchInputElement = searchInputElement;
+				// Set options for autoComplete. We are just allowing regions (cities, states, zip codes, etc) in the United States.
+				var options = {types: ['(regions)'], componentRestrictions: {country: "us"} };
+				// Create official searchbox and search button API constructs.
+				var searchBox = new google.maps.places.Autocomplete(searchInputElement, options);
+				//Set up places service for autoComplete.
+				var places = new google.maps.places.PlacesService(self.gMap);
+
+				// Trigger action when map is moved.
+				self.gMap.addListener('bounds_changed', function() {
+					searchBox.setBounds(self.gMap.getBounds());
+				});
+
+				// Trigger action when a search is begun (clicking the search button)
+				searchButtonElement.addEventListener("click", function(event) {
+					self.searchAsync(searchInputElement);
+				});
+				// Trigger action when a search is begun (clicking an option from Autocomplete suggestions)
+				searchBox.addListener('place_changed', function() {
+					if ( !self.searchSync(searchBox) ) {
+						self.searchAsync(searchInputElement);
+					}
+				});
 			},
 			_clearSearchBox: function() {
 				var self = this;
-				var searchBoxElement = document.getElementById(self.searchBoxID);
-				searchBoxElement.value = "";
+				self.searchInputElement.value = "";
 			},
 			_addMarker: function(marker) {
 				var self = this;
@@ -296,11 +337,5 @@
 		};
 		return Mapstractor;
 	}());
-
-	Mapstractor.create = function(opts) {
-		return new Mapstractor(opts);
-	}
-
-	window.Mapstractor = Mapstractor;
 
 }(window, google));

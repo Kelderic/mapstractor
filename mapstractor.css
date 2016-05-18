@@ -80,17 +80,13 @@ html,body {
 	fill:white;
 }
 
-.controls.top-left input, 
-.controls.bottom-left input,
-.controls.top-left button, 
-.controls.bottom-left button {
+.controls.left input, 
+.controls.left button {
 	float:left;
 }
 
-.controls.top-right input, 
-.controls.bottom-right input,
-.controls.top-right button, 
-.controls.bottom-right button {
+.controls.right input,
+.controls.right button {
 	float:right;
 }
 

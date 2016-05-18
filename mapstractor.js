@@ -19,7 +19,7 @@
 				self.clickingTimout = null;
 				mapElement.style.height = '100%';
 				// Call any functions that are required on page load.
-				self._positionUI();
+				self._createUIWrappers();
 				self._createOverlay();
 				// Add listeners to the map object.
 				self.gMap.addListener('click', function(){
@@ -199,21 +199,19 @@
 				document.body.insertBefore(overlayHTML, document.body.firstChild);
 				self.overlay = document.getElementById("overlay");
 			},
-			_positionUI: function() {
+			_createUIWrappers: function() {
+				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
-				
-				self.gMap.controls[google.maps.ControlPosition.TOP_LEFT].push(self._createUIWrapper('controls top-left'));
-				self.gMap.controls[google.maps.ControlPosition.LEFT_TOP].push(self._createUIWrapper('controls top-left'));
-
-				self.gMap.controls[google.maps.ControlPosition.TOP_RIGHT].push(self._createUIWrapper('controls top-right'));
-				self.gMap.controls[google.maps.ControlPosition.RIGHT_TOP].push(self._createUIWrapper('controls top-right'));
-
-				self.gMap.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(self._createUIWrapper('controls bottom-left'));
-				self.gMap.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(self._createUIWrapper('controls bottom-left'));
-
-				self.gMap.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(self._createUIWrapper('controls bottom-right'));
-				self.gMap.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(self._createUIWrapper('controls bottom-right'));
-
+				// Create and position all control UI wrapper areas that are on the left side.
+				self.gMap.controls[google.maps.ControlPosition.TOP_LEFT].push(self._createUIWrapper('controls left'));
+				self.gMap.controls[google.maps.ControlPosition.LEFT_TOP].push(self._createUIWrapper('controls left'));
+				self.gMap.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(self._createUIWrapper('controls left'));
+				self.gMap.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(self._createUIWrapper('controls left'));
+				// Create and position all control UI wrapper areas that are on the right side.
+				self.gMap.controls[google.maps.ControlPosition.TOP_RIGHT].push(self._createUIWrapper('controls right'));
+				self.gMap.controls[google.maps.ControlPosition.RIGHT_TOP].push(self._createUIWrapper('controls right'));
+				self.gMap.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(self._createUIWrapper('controls right'));
+				self.gMap.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(self._createUIWrapper('controls right'));
 			},
 			_createUIWrapper(className) {
 				var self = this;

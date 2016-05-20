@@ -135,7 +135,7 @@
 				var self = this;
 				var numAreas = self.polygons.length;
 				var areas = self.polygons;
-				var hasLightingRep = 0;
+				var foundContainingArea = 0;
 				place.content = 'None';
 				self.clearMarkers();
 				self.addMarker({place: place});
@@ -146,10 +146,10 @@
 						self.clickIsArtificial = 1;
 						google.maps.event.trigger(area,'click', {});
 						// Record that we now have a matching area.
-						hasLightingRep = 1;
+						foundContainingArea = 1;
 					}
 				}
-				if (!hasLightingRep) {
+				if ( ! foundContainingArea ) {
 					alert('No lighting reps found in your location.');
 				} else {
 					

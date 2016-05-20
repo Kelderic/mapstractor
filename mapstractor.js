@@ -101,7 +101,7 @@
 				var self = this;
 				var place = searchBox.getPlace();
 				if (place.geometry) {
-					self.checkAgainstAreas(place);
+					self.checkIfPlaceIsInAreas(place);
 					return true;
 				} else {
 					return false;
@@ -122,11 +122,11 @@
 					if (status == google.maps.GeocoderStatus.OK) {
 						var place = results[0]; place.name = place.address_components[0].long_name;
 						searchBoxElement.value = place.formatted_address;
-						self.checkAgainstAreas(place);
+						self.checkIfPlaceIsInAreas(place);
 					}
 				});
 			},
-			checkAgainstAreas: function(place) {
+			checkIfPlaceIsInAreas: function(place) {
 				var self = this;
 				var numAreas = self.polygons.length;
 				var areas = self.polygons;
@@ -293,7 +293,7 @@
 								var place = results[0]; place.name = place.address_components[0].long_name;
 								self.searchInputElement.value = place.formatted_address;
 								shareLocationButtonElement.className = shareLocationButtonElement.className + ' active'
-								self.checkAgainstAreas(place);
+								self.checkIfPlaceIsInAreas(place);
 							}
 						});
 					}, function() {

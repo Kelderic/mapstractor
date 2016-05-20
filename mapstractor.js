@@ -9,18 +9,21 @@
 			init: function() {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
+
 				// Set up global variables
-				self.mapWrap = document.getElementById(self.opts.mapWrap);
-				self.gMap = new google.maps.Map(self._createMapElement(), self.opts.map);
-				self.markers = [];
-				self.polygons = [];
-				self.searchInputElement = null;
-				self.directClick = 1;
-				self.clickingTimout = null;
+				self.mapWrap = document.getElementById(self.opts.mapWrap); // Hardcoded map wrapper element.
+				self.gMap = new google.maps.Map(self._createMapElement(), self.opts.map); // The main Google Map object
+				self.markers = []; // Array that holds all markers
+				self.polygons = []; // Array that holds all polygons
+				self.searchInputElement = null; // The search text input element
+				self.directClick = 1; // A boolean that marks whether a click event on polygons is real or artificial
+				self.clickingTimout = null; // Timeout to prevent double clicks from triggering the click event on the main map.
+
 				// Call initiation functions.
 				self._createUIWrappers();
 				self._createOverlay();
-				// Add listeners to the map object.
+
+				// Add click listeners to the map object. Use a timeout to ensure that double clicks aren't counted.
 				self.gMap.addListener('click', function(){
 					self.clickingTimout = setTimeout(function(){
 						self.clearMarkers();
@@ -31,6 +34,8 @@
 				self.gMap.addListener('dblclick', function(){
 					clearTimeout(self.clickingTimout);
 				});
+
+				// Clear the overlay when the map is finished loading
 				self.gMap.addListener('idle',function() {
 					self.overlay.className = '';
 					google.maps.event.clearListeners(self.gMap, 'idle');

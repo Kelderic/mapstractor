@@ -16,7 +16,7 @@
 				self.markers = []; // Array that holds all markers
 				self.polygons = []; // Array that holds all polygons
 				self.searchInputElement = null; // The search text input element
-				self.directClick = 1; // A boolean that marks whether a click event on polygons is real or artificial
+				self.clickIsArtificial = 0; // A boolean that marks whether a click event on polygons is real or artificial
 				self.clickingTimout = null; // Timeout to prevent double clicks from triggering the click event on the main map.
 
 				// Call initiation functions.
@@ -75,10 +75,10 @@
 				var self = this;
 				// Add an event listener so that when the polygon is triggered, via a real click or a fake click, the specifed place is shown.
 				polygon.addListener('click', function(){
-					if ( ! self.directClick ) {
-						//this is a fake click event, triggered by another function. (Typically when a place is searched for and is contained by this polygon)
-						// Don't clear markers, they have already been cleared.
-						self.directClick = 1;
+					if ( self.clickIsArtificial ) {
+						// This is an artificial click event, triggered by a place being
+						// contained in this polygon. Don't clear markers in this case.
+						self.clickIsArtificial = 0;
 					} else {
 						self.clearMarkers();
 					}
@@ -142,9 +142,11 @@
 				for (var i=0; i < numAreas; i++){
 					var area = areas[i];
 					if (google.maps.geometry.poly.containsLocation(place.geometry.location, area)) {
-						self.directClick = 0;
-						hasLightingRep = 1;
+						// Artificially trigger a click event on the polygon
+						self.clickIsArtificial = 1;
 						google.maps.event.trigger(area,'click', {});
+						// Record that we now have a matching area.
+						hasLightingRep = 1;
 					}
 				}
 				if (!hasLightingRep) {

@@ -102,57 +102,6 @@
 				//Setup the button as a Google maps element.
 				self._setupShareLocationButton(shareLocationButtonElement);
 			},
-			searchSync: function(searchBox) {
-				var self = this;
-				var place = searchBox.getPlace();
-				if (place.geometry) {
-					self.checkIfPlaceIsInAreas(place);
-					return true;
-				} else {
-					return false;
-				}
-			},
-			searchAsync: function(searchBoxElement) {
-				var self = this;
-				var geocoder = new google.maps.Geocoder();
-				var autoCompleteList = document.querySelectorAll('.pac-container');
-				var searchText = '';
-				if ( autoCompleteList[0].style.display != 'none' ) {
-					var firstResult = document.querySelectorAll('.pac-item:first-child');
-					searchText = firstResult[0].textContent;
-				} else {
-					searchText = searchBoxElement.value;
-				}
-				geocoder.geocode({'address':searchText }, function(results, status) {
-					if (status == google.maps.GeocoderStatus.OK) {
-						var place = results[0]; place.name = place.address_components[0].long_name;
-						searchBoxElement.value = place.formatted_address;
-						self.checkIfPlaceIsInAreas(place);
-					}
-				});
-			},
-			checkIfPlaceIsInAreas: function(place) {
-				var self = this;
-				var numAreas = self.polygons.length;
-				var areas = self.polygons;
-				var foundContainingArea = 0;
-				place.content = 'None';
-				self.clearMarkers();
-				self.addMarker({place: place});
-				for (var i=0; i < numAreas; i++){
-					var area = areas[i];
-					if (google.maps.geometry.poly.containsLocation(place.geometry.location, area)) {
-						// Artificially trigger a click event on the polygon
-						self.clickIsArtificial = 1;
-						google.maps.event.trigger(area,'click', {});
-						// Record that we now have a matching area.
-						foundContainingArea = 1;
-					}
-				}
-				if ( ! foundContainingArea ) {
-					alert('No lighting reps found in your location.');
-				}
-			},
 			updateLocation: function(place) {
 				var self = this;
 				// Update markers (Clear old and create new)
@@ -298,7 +247,7 @@
 								var place = results[0]; place.name = place.address_components[0].long_name;
 								self.searchInputElement.value = place.formatted_address;
 								shareLocationButtonElement.className = shareLocationButtonElement.className + ' active'
-								self.checkIfPlaceIsInAreas(place);
+								self._checkIfPlaceIsInAreas(place);
 							}
 						});
 					}, function() {
@@ -323,14 +272,65 @@
 
 				// Trigger action when a search is begun (clicking the search button)
 				searchButtonElement.addEventListener('click', function(event) {
-					self.searchAsync(searchInputElement);
+					self._searchAsync(searchInputElement);
 				});
 				// Trigger action when a search is begun (clicking an option from Autocomplete suggestions)
 				searchBox.addListener('place_changed', function() {
-					if ( !self.searchSync(searchBox) ) {
-						self.searchAsync(searchInputElement);
+					if ( !self._searchSync(searchBox) ) {
+						self._searchAsync(searchInputElement);
 					}
 				});
+			},
+			_searchSync: function(searchBox) {
+				var self = this;
+				var place = searchBox.getPlace();
+				if (place.geometry) {
+					self._checkIfPlaceIsInAreas(place);
+					return true;
+				} else {
+					return false;
+				}
+			},
+			_searchAsync: function(searchBoxElement) {
+				var self = this;
+				var geocoder = new google.maps.Geocoder();
+				var autoCompleteList = document.querySelectorAll('.pac-container');
+				var searchText = '';
+				if ( autoCompleteList[0].style.display != 'none' ) {
+					var firstResult = document.querySelectorAll('.pac-item:first-child');
+					searchText = firstResult[0].textContent;
+				} else {
+					searchText = searchBoxElement.value;
+				}
+				geocoder.geocode({'address':searchText }, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK) {
+						var place = results[0]; place.name = place.address_components[0].long_name;
+						searchBoxElement.value = place.formatted_address;
+						self._checkIfPlaceIsInAreas(place);
+					}
+				});
+			},
+			_checkIfPlaceIsInAreas: function(place) {
+				var self = this;
+				var numAreas = self.polygons.length;
+				var areas = self.polygons;
+				var foundContainingArea = 0;
+				place.content = 'None';
+				self.clearMarkers();
+				self.addMarker({place: place});
+				for (var i=0; i < numAreas; i++){
+					var area = areas[i];
+					if (google.maps.geometry.poly.containsLocation(place.geometry.location, area)) {
+						// Artificially trigger a click event on the polygon
+						self.clickIsArtificial = 1;
+						google.maps.event.trigger(area,'click', {});
+						// Record that we now have a matching area.
+						foundContainingArea = 1;
+					}
+				}
+				if ( ! foundContainingArea ) {
+					alert('No lighting reps found in your location.');
+				}
 			},
 			_clearSearchBox: function() {
 				var self = this;

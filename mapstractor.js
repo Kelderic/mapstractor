@@ -32,7 +32,7 @@
 					clearTimeout(self.clickingTimout);
 				});
 				self.gMap.addListener('idle',function() {
-					self.overlay.className = "";
+					self.overlay.className = '';
 					google.maps.event.clearListeners(self.gMap, 'idle');
 				});
 			},
@@ -102,15 +102,15 @@
 			searchAsync: function(searchBoxElement) {
 				var self = this;
 				var geocoder = new google.maps.Geocoder();
-				var autoCompleteList = document.querySelectorAll(".pac-container");
+				var autoCompleteList = document.querySelectorAll('.pac-container');
 				var searchText = '';
 				if ( autoCompleteList[0].style.display != 'none' ) {
-					var firstResult = document.querySelectorAll(".pac-item:first-child");
+					var firstResult = document.querySelectorAll('.pac-item:first-child');
 					searchText = firstResult[0].textContent;
 				} else {
 					searchText = searchBoxElement.value;
 				}
-				geocoder.geocode({"address":searchText }, function(results, status) {
+				geocoder.geocode({'address':searchText }, function(results, status) {
 					if (status == google.maps.GeocoderStatus.OK) {
 						var place = results[0]; place.name = place.address_components[0].long_name;
 						searchBoxElement.value = place.formatted_address;
@@ -123,7 +123,7 @@
 				var numAreas = self.polygons.length;
 				var areas = self.polygons;
 				var hasLightingRep = 0;
-				place.content = "None";
+				place.content = 'None';
 				self.clearMarkers();
 				self.addMarker({place: place});
 				for (var i=0; i < numAreas; i++){
@@ -164,7 +164,7 @@
 				var infoWindow;
 				var marker = self._createMarker(opts);
 				self._addMarker(marker);
-				if (opts.place.content != "None") {
+				if (opts.place.content != 'None') {
 					if (opts.place.content) {
 						infoWindow = new google.maps.InfoWindow({
 							content: opts.place.content,
@@ -196,8 +196,8 @@
 				var spanHTML = document.createElement('span');
 				var text = document.createTextNode('Starting up...');
 				// Add attributes and content to elements
-				overlayHTML.id = "overlay";
-				overlayHTML.className = "loading";
+				overlayHTML.id = 'overlay';
+				overlayHTML.className = 'loading';
 				spanHTML.appendChild(text);
 				// Assemble final overlay element
 				overlayHTML.appendChild(faderHTML);
@@ -207,7 +207,7 @@
 				self.mapWrap.style.position = 'relative';
 				// Insert the overlay element.
 				self.mapWrap.insertBefore(overlayHTML, self.mapWrap.firstElementChild);
-				self.overlay = document.getElementById("overlay");
+				self.overlay = document.getElementById('overlay');
 			},
 			_createUIWrappers: function() {
 				// Store this as self, so that it is accessible in sub-functions.
@@ -269,27 +269,27 @@
 				var self = this;
 				var timeout;
 				// Trigger action when a share location button is clicked.
-				shareLocationButtonElement.addEventListener("click", function(event) {
-					self.overlay.className = "loading";
-					self.overlay.getElementsByTagName('span')[0].textContent = "Getting your location...";
+				shareLocationButtonElement.addEventListener('click', function(event) {
+					self.overlay.className = 'loading';
+					self.overlay.getElementsByTagName('span')[0].textContent = 'Getting your location...';
 					timeout = setTimeout(function() {
-						self.overlay.className = "";
+						self.overlay.className = '';
 					}, 15000);
 					navigator.geolocation.getCurrentPosition(function(position){
 						var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 						var geocoder = new google.maps.Geocoder();
-						geocoder.geocode({"location":location }, function(results, status) {
+						geocoder.geocode({'location':location }, function(results, status) {
 							if (status == google.maps.GeocoderStatus.OK) {
-								self.overlay.className = "";
+								self.overlay.className = '';
 								clearTimeout(timeout);
 								var place = results[0]; place.name = place.address_components[0].long_name;
 								self.searchInputElement.value = place.formatted_address;
-								shareLocationButtonElement.className = shareLocationButtonElement.className + " active"
+								shareLocationButtonElement.className = shareLocationButtonElement.className + ' active'
 								self.checkAgainstAreas(place);
 							}
 						});
 					}, function() {
-						self.overlay.className = "";
+						self.overlay.className = '';
 					});
 				});
 			},
@@ -299,7 +299,7 @@
 				// Store Search Input so that other functions can access it.
 				self.searchInputElement = searchInputElement;
 				// Set options for autoComplete. We are just allowing regions (cities, states, zip codes, etc) in the United States.
-				var options = {types: ['(regions)'], componentRestrictions: {country: "us"} };
+				var options = {types: ['(regions)'], componentRestrictions: {country: 'us'} };
 				// Create official searchbox and search button API constructs.
 				var searchBox = new google.maps.places.Autocomplete(searchInputElement, options);
 				//Set up places service for autoComplete.
@@ -311,7 +311,7 @@
 				});
 
 				// Trigger action when a search is begun (clicking the search button)
-				searchButtonElement.addEventListener("click", function(event) {
+				searchButtonElement.addEventListener('click', function(event) {
 					self.searchAsync(searchInputElement);
 				});
 				// Trigger action when a search is begun (clicking an option from Autocomplete suggestions)
@@ -323,7 +323,7 @@
 			},
 			_clearSearchBox: function() {
 				var self = this;
-				self.searchInputElement.value = "";
+				self.searchInputElement.value = '';
 			},
 			_addMarker: function(marker) {
 				var self = this;

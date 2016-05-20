@@ -310,8 +310,6 @@
 				var options = {types: ['(regions)'], componentRestrictions: {country: 'us'} };
 				// Create official searchbox and search button API constructs.
 				var searchBox = new google.maps.places.Autocomplete(searchInputElement, options);
-				//Set up places service for autoComplete.
-				var places = new google.maps.places.PlacesService(self.gMap);
 
 				// Trigger action when map is moved.
 				self.gMap.addListener('bounds_changed', function() {

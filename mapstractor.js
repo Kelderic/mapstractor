@@ -43,7 +43,7 @@
 					map: self.gMap
 				});
 			},
-			addPolygon: function(encodedCoordinates, color, litRepPlace) {
+			addPolygon: function(encodedCoordinates, color) {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
 				var coordinates = google.maps.geometry.encoding.decodePath(encodedCoordinates);
@@ -56,14 +56,6 @@
 					fillOpacity:0.4,
 				});
 				polygon.setMap(self.gMap);
-				polygon.addListener('click', function(){
-					if (self.directClick) {
-						self.clearMarkers();
-					} else {
-						self.directClick = 1;
-					}
-					marker = self.updateLocation(litRepPlace);
-				});
 				polygon.addListener('mouseover',function(){
 					this.setOptions({fillOpacity: 0.4, strokeWeight:2});
 				}); 
@@ -71,6 +63,22 @@
 					this.setOptions({fillOpacity: 0.3,strokeWeight:1});
 				});
 				self.polygons.push(polygon);
+				return polygon;
+			},
+			linkPlaceToPolygon: function(polygon, place) {
+				// Store this as self, so that it is accessible in sub-functions.
+				var self = this;
+				// Add an event listener so that when the polygon is triggered, via a real click or a fake click, the specifed place is shown.
+				polygon.addListener('click', function(){
+					if ( ! self.directClick ) {
+						//this is a fake click event, triggered by another function. (Typically when a place is searched for and is contained by this polygon)
+						// Don't clear markers, they have already been cleared.
+						self.directClick = 1;
+					} else {
+						self.clearMarkers();
+					}
+					self.updateLocation(place);
+				});
 			},
 			addSearchbox: function(location) {
 				// Store this as self, so that it is accessible in sub-functions.

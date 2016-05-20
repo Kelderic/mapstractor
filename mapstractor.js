@@ -151,8 +151,6 @@
 				}
 				if ( ! foundContainingArea ) {
 					alert('No lighting reps found in your location.');
-				} else {
-					
 				}
 			},
 			updateLocation: function(place) {

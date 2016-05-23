@@ -32,7 +32,7 @@
 				self.gMap.addListener('click', function(){
 					self.clickingTimout = setTimeout(function(){
 						self.clearMarkers();
-						self._clearSearchBox();
+						self.searchInputElement.value = '';
 						document.activeElement.blur();
 					}, 200);
 				});
@@ -551,11 +551,6 @@
 						callback(place);
 					}
 				});
-			},
-
-			_clearSearchBox: function() {
-				var self = this;
-				self.searchInputElement.value = '';
 			},
 
 			_createMarker: function(params) {

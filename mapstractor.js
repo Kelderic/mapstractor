@@ -61,9 +61,9 @@
 				/* Purpose:   This is the URL of the KML file that */
 				/*            is going to be added to the map. It  */
 				/*            is a required parameter.             */
-				var fileURL = 'fileURL' in params ? params.fileURL : function(){};
+				var fileURL = 'fileURL' in params ? params.fileURL : '';
 
-				// STORE this AS self
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 
 				var self = this;
 
@@ -75,10 +75,36 @@
 				});
 
 			},
-			addPolygon: function(encodedCoordinates, color) {
-				// Store this as self, so that it is accessible in sub-functions.
+
+			addPolygon: function(params) {
+
+				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
+
+				/* Variable:  encodedCoordinates                   */
+				/* Type:      String                               */
+				/* Default:   ''                                   */
+				/* Purpose:   This is the encoded coordiates of    */
+				/*            polygon, which will be decoded and   */
+				/*            used to create a polygon.            */
+				var encodedCoordinates = 'encodedCoordinates' in params ? params.encodedCoordinates : '';
+
+				/* Variable:  color                                */
+				/* Type:      String                               */
+				/* Default:   ''                                   */
+				/* Purpose:   This is the color of the polygon.    */
+				var color = 'color' in params ? params.color : '';
+
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
 				var self = this;
+
+				// DECODE THE ENCODED COORDIATES
+
 				var coordinates = google.maps.geometry.encoding.decodePath(encodedCoordinates);
+
+				// CREATE THE POLYGON
+
 				var polygon = new google.maps.Polygon({
 					paths: coordinates,
 					strokeOpacity: 1,
@@ -87,16 +113,30 @@
 					fillColor: color,
 					fillOpacity:0.4,
 				});
+
+				// ADD POLYGON TO MAP
+
 				polygon.setMap(self.gMap);
+
+				// ADD EVENT LISTENERS TO POLYGON TO SHOW HOVER EFFECT
+
 				polygon.addListener('mouseover',function(){
 					this.setOptions({fillOpacity: 0.4, strokeWeight:2});
 				}); 
 				polygon.addListener('mouseout',function(){
 					this.setOptions({fillOpacity: 0.3,strokeWeight:1});
 				});
+
+				// ADD POLYGON TO ARRAY OF POLYGONS FOR REFERENCE BY OTHER FUNCTIONS
+
 				self.polygons.push(polygon);
+
+				// RETURN POLYGON TO ALLOW IT TO BE MANIPULATED BY IT'S CREATOR FUNCTION
+
 				return polygon;
+
 			},
+
 			linkPlaceToPolygon: function(polygon, place) {
 
 				// Store this as self, so that it is accessible in sub-functions.
@@ -133,7 +173,7 @@
 				/*            place successfully.                  */
 				var callback = 'callback' in params ? params.callback : function(){};
 
-				// STORE this AS self
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 
 				var self = this;
 
@@ -167,7 +207,7 @@
 				/*            place successfully.                  */
 				var callback = 'callback' in params ? params.callback : function(){};
 
-				// STORE this AS self
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 
 				var self = this;
 

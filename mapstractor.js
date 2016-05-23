@@ -305,12 +305,23 @@
 			},
 
 			clearMarkers: function() {
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
 				var self = this;
+
+				// REMOVE ALL MARKERS FROM THE MAP
+
 				self.markers.forEach(function(marker) {
 					marker.setMap(null);
 				});
+
+				// DELETE MARKERS
+
 				self.markers = [];
+
 			},
+
 			addMarker: function(opts) {
 				var self = this;
 				var infoWindow;

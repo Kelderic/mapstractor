@@ -346,10 +346,7 @@
 
 				// CREATE A GOOGLE MAPS MARKER OBJECT USING THE PROVIDED PLACE AND OPTIONAL MARKER URL INFO
 
-				var marker = self._createMarker({
-					place: place,
-					markerURL: markerURL
-				});
+				var marker = self._createMarker(place, markerURL);
 
 				// ADD THE MARKER TO THE SET OF CURRENT MARKERS
 
@@ -553,22 +550,31 @@
 				});
 			},
 
-			_createMarker: function(params) {
+			_createMarker: function(place, markerURL) {
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 
 				var self = this;
 
+				// SET UP THE OPTIONS OBJECT THAT THE GOOGLE JS API MARKER CREATION FUNCTION REQUIRES
+
 				var options = {
-					title: params.place.name,
-					position: params.place.geometry.location,
+					title: place.name,
+					position: place.geometry.location,
 					map: self.gMap
 				}
 
-				if ( params.markerURL ) {
+				// IF WE DO HAVE A CUSTOM MARKER URL, ADD AN ICON OBJECT TO THE OPTIONS OBJECT
+
+				if ( markerURL ) {
 					options.icon = {
-						url:params.markerURL,
+						url:markerURL,
 						scaledSize: new google.maps.Size(50,50)
 					}
 				}
+
+				// CREATE THE MARKER OBJECT AND RETURN IT.
+
 				return new google.maps.Marker(options);
 			}
 

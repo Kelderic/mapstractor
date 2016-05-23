@@ -6,6 +6,11 @@
 			this.init();
 		}
 		Mapstractor.prototype = {
+
+			/***************************************/
+			/************* INITIALIZE **************/
+			/***************************************/
+
 			init: function() {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
@@ -41,6 +46,11 @@
 					google.maps.event.clearListeners(self.gMap, 'idle');
 				});
 			},
+
+			/***************************************/
+			/********** PUBLIC FUNCTIONS ***********/
+			/***************************************/
+
 			addKmlLayer: function(file) {
 				var self = this;
 				var kmlLayer = new google.maps.KmlLayer({
@@ -85,23 +95,73 @@
 					self.updateLocation(place);
 				});
 			},
+
 			addSearchbox: function(opts) {
-				// Store this as self, so that it is accessible in sub-functions.
+
+				// SETUP VARIABLES
+
+				/* Variable:  location                             */
+				/* Type:      String                               */
+				/* Default:   'TOP_LEFT'                           */
+				/* Purpose:   This string is the physical location */
+				/*            where the UI element will be placed  */
+				var location = 'location' in opts ? opts.location : 'TOP_RIGHT';
+
+				/* Variable:  callback                             */
+				/* Type:      function                             */
+				/* Default:   function(){}                         */
+				/* Purpose:   This function is the callback which  */
+				/*            is called when the searchbox finds a */
+				/*            place successfully.                  */
+				var callback = 'callback' in opts ? opts.callback : function(){};
+
+				// STORE this AS self
+
 				var self = this;
-				// Create the html button element.
-				var searchInputElement = self._createSearchInput(opts.location);
-				var searchButtonElement = self._createSearchButton(opts.location);
-				//Setup the button as a Google maps element.
-				self._setupSearchbox(searchInputElement, searchButtonElement);
+
+				// CREATE THE HTML ELEMENTS
+
+				var searchInputElement = self._createSearchInput(location);
+				var searchButtonElement = self._createSearchButton(location);
+
+				// SET UP THE ELEMENTS WITH THE GOOGLE JS API
+
+				self._setupSearchbox(searchInputElement, searchButtonElement, callback);
+
 			},
+
 			addShareLocationButton: function(opts) {
-				// Store this as self, so that it is accessible in sub-functions.
+
+				// SETUP VARIABLES
+
+				/* Variable:  location                             */
+				/* Type:      String                               */
+				/* Default:   'TOP_LEFT'                           */
+				/* Purpose:   This string is the physical location */
+				/*            where the UI element will be placed  */
+				var location = 'location' in opts ? opts.location : 'TOP_RIGHT';
+
+				/* Variable:  callback                             */
+				/* Type:      function                             */
+				/* Default:   function(){}                         */
+				/* Purpose:   This function is the callback which  */
+				/*            is called when the searchbox finds a */
+				/*            place successfully.                  */
+				var callback = 'callback' in opts ? opts.callback : function(){};
+
+				// STORE this AS self
+
 				var self = this;
-				// Create the html button element.
-				var shareLocationButtonElement = self._createShareLocationButton(opts.location);
-				//Setup the button as a Google maps element.
-				self._setupShareLocationButton(shareLocationButtonElement);
+
+				// CREATE THE HTML ELEMENTS
+
+				var shareLocationButtonElement = self._createShareLocationButton(location);
+
+				// SET UP THE ELEMENTS WITH THE GOOGLE JS API
+
+				self._setupShareLocationButton(shareLocationButtonElement, callback);
 			},
+
 			updateLocation: function(place) {
 				var self = this;
 				// Update markers (Clear old and create new)
@@ -140,6 +200,12 @@
 				}
 				return marker;
 			},
+
+			/***************************************/
+			/********** PRIVATE FUNCTIONS **********/
+			/***************************************/
+
+
 			_createMapElement: function() {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
@@ -226,7 +292,7 @@
 				self.gMap.controls[google.maps.ControlPosition[location]].j[0].appendChild(shareLocationButtonElement);
 				return shareLocationButtonElement;
 			},
-			_setupShareLocationButton: function(shareLocationButtonElement) {
+			_setupShareLocationButton: function(shareLocationButtonElement, callback) {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
 				var timeout;
@@ -247,7 +313,7 @@
 								var place = results[0]; place.name = place.address_components[0].long_name;
 								self.searchInputElement.value = place.formatted_address;
 								shareLocationButtonElement.className = shareLocationButtonElement.className + ' active'
-								self.checkIfPlaceIsInAreas(place);
+								callback(place);
 							}
 						});
 					}, function() {
@@ -255,7 +321,7 @@
 					});
 				});
 			},
-			_setupSearchbox: function(searchInputElement, searchButtonElement) {
+			_setupSearchbox: function(searchInputElement, searchButtonElement, callback) {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
 				// Store Search Input so that other functions can access it.
@@ -272,19 +338,19 @@
 
 				// Trigger action when a search is begun (clicking the search button)
 				searchButtonElement.addEventListener('click', function(event) {
-					self._getPlaceFromAutocompleteSuggestions();
+					self._getPlaceFromAutocompleteSuggestions(callback);
 				});
 				// Trigger action when a search is begun (clicking an option from Autocomplete suggestions)
 				searchBox.addListener('place_changed', function() {
 					var place = searchBox.getPlace();
 					if (place.geometry) {
-						self.checkIfPlaceIsInAreas(place);
+						callback(place);
 					} else {
-						self._getPlaceFromAutocompleteSuggestions();
+						self._getPlaceFromAutocompleteSuggestions(callback);
 					}
 				});
 			},
-			_getPlaceFromAutocompleteSuggestions: function() {
+			_getPlaceFromAutocompleteSuggestions: function(callback) {
 				var self = this;
 				var geocoder = new google.maps.Geocoder();
 				var autoCompleteList = document.querySelectorAll('.pac-container');
@@ -299,31 +365,9 @@
 					if (status == google.maps.GeocoderStatus.OK) {
 						var place = results[0]; place.name = place.address_components[0].long_name;
 						self.searchInputElement.value = place.formatted_address;
-						self.checkIfPlaceIsInAreas(place);
+						callback(place);
 					}
 				});
-			},
-			checkIfPlaceIsInAreas: function(place) {
-				var self = this;
-				var numAreas = self.polygons.length;
-				var areas = self.polygons;
-				var foundContainingArea = 0;
-				place.content = 'None';
-				self.clearMarkers();
-				self.addMarker({place: place});
-				for (var i=0; i < numAreas; i++){
-					var area = areas[i];
-					if (google.maps.geometry.poly.containsLocation(place.geometry.location, area)) {
-						// Artificially trigger a click event on the polygon
-						self.clickIsArtificial = 1;
-						google.maps.event.trigger(area,'click', {});
-						// Record that we now have a matching area.
-						foundContainingArea = 1;
-					}
-				}
-				if ( ! foundContainingArea ) {
-					alert('No lighting reps found in your location.');
-				}
 			},
 			_clearSearchBox: function() {
 				var self = this;

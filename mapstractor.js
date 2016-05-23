@@ -174,7 +174,10 @@
 					} else {
 						self.clearMarkers();
 					}
-					self.updateLocation(place);
+
+					self.updateLocation({
+						place: place
+					});
 				});
 
 			},
@@ -245,18 +248,62 @@
 				self._setupShareLocationButton(shareLocationButtonElement, callback);
 			},
 
-			updateLocation: function(place) {
+			updateLocation: function(params) {
+
+				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
+
+				/* Variable:  place                                */
+				/* Type:      Custom Google Maps Place Object      */
+				/* Default:   ''                                   */
+				/* Purpose:   This is a Google Maps place object   */
+				/* Purpose:   that will be shown in an tooltip     */
+				/*            when the linked polygon is clicked.  */
+				var place = 'place' in params ? params.place : '';
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
 				var self = this;
-				// Update markers (Clear old and create new)
-				self.addMarker({place: place, icon: self.opts.markerURL});
-				// Update the boundary of the map (viewport)
-				self.updateViewport(place);
+
+				// ADD NEW MARKER
+
+				self.addMarker({
+					place: place,
+					icon: self.opts.markerURL
+				});
+
+				// MOVE THE VIEWPORT OF THE MAP TO THE NEW MARKER
+
+				self.updateViewport({
+					place: place
+				});
+
 			},
-			updateViewport: function(place) {
+
+			updateViewport: function(params) {
+
+				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
+
+				/* Variable:  place                                */
+				/* Type:      Custom Google Maps Place Object      */
+				/* Default:   ''                                   */
+				/* Purpose:   This is a Google Maps place object   */
+				/* Purpose:   that will be shown in an tooltip     */
+				/*            when the linked polygon is clicked.  */
+				var place = 'place' in params ? params.place : '';
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
 				var self = this;
-				self.gMap.panTo(place.geometry.location);  // .fitbounds() is the official way. I want to control the control the zoom level and animated the pan.
+
+				// MOVE THE VIEWPORT TO THE SPECIFIED PLACE. ( .fitbounds() IS THE TYPICAL
+				// WAY OF DOING THIS. THIS WAY ALLOWS FOR CONTROL OVER THE ZOOM LEVLEL AND
+				// IT ANIMATES THE PAN. )
+
+				self.gMap.panTo(place.geometry.location);
 				self.gMap.setZoom(6);
+
 			},
+
 			clearMarkers: function() {
 				var self = this;
 				self.markers.forEach(function(marker) {

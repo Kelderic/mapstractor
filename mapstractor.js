@@ -351,9 +351,9 @@
 					markerURL: markerURL
 				});
 
-				// ADD THE MARKER TO THE MAP
+				// ADD THE MARKER TO THE SET OF CURRENT MARKERS
 
-				self._addMarker(marker);
+				self.markers.push(marker);
 
 				// IF THE PLACE HAS AN INFOBOX, CREATE THAT INFOBOX AND OPEN IT ON THE MAP
 
@@ -380,7 +380,6 @@
 			/********** PRIVATE FUNCTIONS **********/
 			/***************************************/
 
-
 			_createMapElement: function() {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
@@ -390,6 +389,7 @@
 				self.mapWrap.appendChild(element);
 				return element;
 			},
+
 			_createOverlay: function() {
 				var self = this;
 				// Create HTML elements
@@ -412,6 +412,7 @@
 				self.mapWrap.insertBefore(overlayHTML, self.mapWrap.firstElementChild);
 				self.overlay = document.getElementById('overlay');
 			},
+
 			_createUIWrappers: function() {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
@@ -426,6 +427,7 @@
 				self.gMap.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(self._createUIWrapper('controls right'));
 				self.gMap.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(self._createUIWrapper('controls right'));
 			},
+
 			_createUIWrapper(className) {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
@@ -435,6 +437,7 @@
 				self.mapWrap.appendChild(element);
 				return element;
 			},
+
 			_createSearchInput: function(location) {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
@@ -446,6 +449,7 @@
 				self.gMap.controls[google.maps.ControlPosition[location]].j[0].appendChild(searchInputElement);
 				return searchInputElement;
 			},
+
 			_createSearchButton: function(location) {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
@@ -458,6 +462,7 @@
 				return searchButtonElement;
 
 			},
+
 			_createShareLocationButton: function(location) {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
@@ -467,6 +472,7 @@
 				self.gMap.controls[google.maps.ControlPosition[location]].j[0].appendChild(shareLocationButtonElement);
 				return shareLocationButtonElement;
 			},
+
 			_setupShareLocationButton: function(shareLocationButtonElement, callback) {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
@@ -496,6 +502,7 @@
 					});
 				});
 			},
+
 			_setupSearchbox: function(searchInputElement, searchButtonElement, callback) {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
@@ -525,6 +532,7 @@
 					}
 				});
 			},
+
 			_getPlaceFromAutocompleteSuggestions: function(callback) {
 				var self = this;
 				var geocoder = new google.maps.Geocoder();
@@ -544,14 +552,12 @@
 					}
 				});
 			},
+
 			_clearSearchBox: function() {
 				var self = this;
 				self.searchInputElement.value = '';
 			},
-			_addMarker: function(marker) {
-				var self = this;
-				self.markers.push(marker);
-			},
+
 			_createMarker: function(params) {
 
 				var self = this;
@@ -569,7 +575,8 @@
 					}
 				}
 				return new google.maps.Marker(options);
-			},
+			}
+
 		};
 		return Mapstractor;
 	}());

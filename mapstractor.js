@@ -153,7 +153,7 @@
 				/* Type:      Custom Google Maps Place Object      */
 				/* Default:   ''                                   */
 				/* Purpose:   This is a Google Maps place object   */
-				/*            that will be shown in an tooltip     */
+				/*            that will be shown in an infobox     */
 				/*            when the linked polygon is clicked.  */
 				var place = 'place' in params ? params.place : '';
 
@@ -163,7 +163,7 @@
 
 				// ADD AN EVENT LISTENER ON THE POLYGON, WHICH WILL TRIGGER
 				// UPDATING LOCATION TO SHOW THE LINKED PLACE. THIS WILL
-				// MOVE THE VIEWPORT TO THE LOCATION AND CREATE A TOOLTIP
+				// MOVE THE VIEWPORT TO THE LOCATION AND CREATE A INFOBOX
 				// SHOWING INFORMATION ABOUT THE PLACE
 
 				polygon.addListener('click', function(){

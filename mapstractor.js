@@ -51,12 +51,29 @@
 			/********** PUBLIC FUNCTIONS ***********/
 			/***************************************/
 
-			addKmlLayer: function(file) {
+			addKmlLayer: function(params) {
+
+				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
+
+				/* Variable:  fileURL                              */
+				/* Type:      String                               */
+				/* Default:   ''                                   */
+				/* Purpose:   This is the URL of the KML file that */
+				/*            is going to be added to the map. It  */
+				/*            is a required parameter.             */
+				var fileURL = 'fileURL' in params ? params.fileURL : function(){};
+
+				// STORE this AS self
+
 				var self = this;
+
+				// CREATE KML LAYER ON THE MAP
+
 				var kmlLayer = new google.maps.KmlLayer({
-					url: file,
+					url: fileURL,
 					map: self.gMap
 				});
+
 			},
 			addPolygon: function(encodedCoordinates, color) {
 				// Store this as self, so that it is accessible in sub-functions.
@@ -81,6 +98,7 @@
 				return polygon;
 			},
 			linkPlaceToPolygon: function(polygon, place) {
+
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
 				// Add an event listener so that when the polygon is triggered, via a real click or a fake click, the specifed place is shown.
@@ -96,24 +114,24 @@
 				});
 			},
 
-			addSearchbox: function(opts) {
+			addSearchbox: function(params) {
 
-				// SETUP VARIABLES
+				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
 
 				/* Variable:  location                             */
 				/* Type:      String                               */
 				/* Default:   'TOP_LEFT'                           */
 				/* Purpose:   This string is the physical location */
 				/*            where the UI element will be placed  */
-				var location = 'location' in opts ? opts.location : 'TOP_RIGHT';
+				var location = 'location' in params ? params.location : 'TOP_RIGHT';
 
 				/* Variable:  callback                             */
-				/* Type:      function                             */
+				/* Type:      Function                             */
 				/* Default:   function(){}                         */
 				/* Purpose:   This function is the callback which  */
 				/*            is called when the searchbox finds a */
 				/*            place successfully.                  */
-				var callback = 'callback' in opts ? opts.callback : function(){};
+				var callback = 'callback' in params ? params.callback : function(){};
 
 				// STORE this AS self
 
@@ -130,16 +148,16 @@
 
 			},
 
-			addShareLocationButton: function(opts) {
+			addShareLocationButton: function(params) {
 
-				// SETUP VARIABLES
+				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
 
 				/* Variable:  location                             */
 				/* Type:      String                               */
 				/* Default:   'TOP_LEFT'                           */
 				/* Purpose:   This string is the physical location */
 				/*            where the UI element will be placed  */
-				var location = 'location' in opts ? opts.location : 'TOP_RIGHT';
+				var location = 'location' in params ? params.location : 'TOP_RIGHT';
 
 				/* Variable:  callback                             */
 				/* Type:      function                             */
@@ -147,7 +165,7 @@
 				/* Purpose:   This function is the callback which  */
 				/*            is called when the searchbox finds a */
 				/*            place successfully.                  */
-				var callback = 'callback' in opts ? opts.callback : function(){};
+				var callback = 'callback' in params ? params.callback : function(){};
 
 				// STORE this AS self
 

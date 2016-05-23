@@ -277,7 +277,7 @@
 				// Trigger action when a search is begun (clicking an option from Autocomplete suggestions)
 				searchBox.addListener('place_changed', function() {
 					if ( !self._searchSync(searchBox) ) {
-						self._searchAsync(searchInputElement);
+						self._searchAsync();
 					}
 				});
 			},
@@ -291,7 +291,7 @@
 					return false;
 				}
 			},
-			_searchAsync: function(searchBoxElement) {
+			_searchAsync: function() {
 				var self = this;
 				var geocoder = new google.maps.Geocoder();
 				var autoCompleteList = document.querySelectorAll('.pac-container');
@@ -300,12 +300,12 @@
 					var firstResult = document.querySelectorAll('.pac-item:first-child');
 					searchText = firstResult[0].textContent;
 				} else {
-					searchText = searchBoxElement.value;
+					searchText = self.searchInputElement.value;
 				}
 				geocoder.geocode({'address':searchText }, function(results, status) {
 					if (status == google.maps.GeocoderStatus.OK) {
 						var place = results[0]; place.name = place.address_components[0].long_name;
-						searchBoxElement.value = place.formatted_address;
+						self.searchInputElement.value = place.formatted_address;
 						self.checkIfPlaceIsInAreas(place);
 					}
 				});

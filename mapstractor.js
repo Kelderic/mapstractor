@@ -153,7 +153,7 @@
 				/* Type:      Custom Google Maps Place Object      */
 				/* Default:   ''                                   */
 				/* Purpose:   This is a Google Maps place object   */
-				/* Purpose:   that will be shown in an tooltip     */
+				/*            that will be shown in an tooltip     */
 				/*            when the linked polygon is clicked.  */
 				var place = 'place' in params ? params.place : '';
 
@@ -256,8 +256,7 @@
 				/* Type:      Custom Google Maps Place Object      */
 				/* Default:   ''                                   */
 				/* Purpose:   This is a Google Maps place object   */
-				/* Purpose:   that will be shown in an tooltip     */
-				/*            when the linked polygon is clicked.  */
+				/*            that the map will focused on.        */
 				var place = 'place' in params ? params.place : '';
 
 				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
@@ -268,7 +267,7 @@
 
 				self.addMarker({
 					place: place,
-					icon: self.opts.markerURL
+					markerURL: self.opts.markerURL
 				});
 
 				// MOVE THE VIEWPORT OF THE MAP TO THE NEW MARKER
@@ -287,8 +286,7 @@
 				/* Type:      Custom Google Maps Place Object      */
 				/* Default:   ''                                   */
 				/* Purpose:   This is a Google Maps place object   */
-				/* Purpose:   that will be shown in an tooltip     */
-				/*            when the linked polygon is clicked.  */
+				/*            that the viewport will focused on.   */
 				var place = 'place' in params ? params.place : '';
 
 				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
@@ -322,24 +320,60 @@
 
 			},
 
-			addMarker: function(opts) {
+			addMarker: function(params) {
+
+				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
+
+				/* Variable:  place                                */
+				/* Type:      Custom Google Maps Place Object      */
+				/* Default:   ''                                   */
+				/* Purpose:   This is a Google Maps place object   */
+				/*            that will be used to create a marker */
+				/*            as it's location.                    */
+				var place = 'place' in params ? params.place : '';
+
+				/* Variable:  icon                                 */
+				/* Type:      String                               */
+				/* Default:   ''                                   */
+				/* Purpose:   This is the URL of the custom image  */
+				/*            that is being used as the default    */
+				/*            marker.                              */
+				var markerURL = 'markerURL' in params ? params.markerURL : '';
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
 				var self = this;
-				var infoWindow;
-				var marker = self._createMarker(opts);
+
+				// CREATE A GOOGLE MAPS MARKER OBJECT USING THE PROVIDED PLACE AND OPTIONAL MARKER URL INFO
+
+				var marker = self._createMarker({
+					place: place,
+					markerURL: markerURL
+				});
+
+				// ADD THE MARKER TO THE MAP
+
 				self._addMarker(marker);
-				if (opts.place.content != 'None') {
-					if (opts.place.content) {
-						infoWindow = new google.maps.InfoWindow({
-							content: opts.place.content,
+
+				// IF THE PLACE HAS AN INFOBOX, CREATE THAT INFOBOX AND OPEN IT ON THE MAP
+
+				if ( place.infobox != false ) {
+					if (place.content) {
+						var infoWindow = new google.maps.InfoWindow({
+							content: place.content,
 						});
 					} else {
-						infoWindow = new google.maps.InfoWindow({
-							content: opts.place.formatted_address
+						var infoWindow = new google.maps.InfoWindow({
+							content: place.formatted_address
 						});
 					}
 					infoWindow.open(self.gMap, marker);
 				}
+
+				// RETURN THE MARKER TO THE FUNCTION THAT REQUESTED IT
+
 				return marker;
+
 			},
 
 			/***************************************/
@@ -518,19 +552,23 @@
 				var self = this;
 				self.markers.push(marker);
 			},
-			_createMarker: function(opts) {
+			_createMarker: function(params) {
+
 				var self = this;
-				var localOpts = {
-					title: opts.place.name,
-					position: opts.place.geometry.location,
-					map: self.gMap,
-					icon: {
-						url:opts.icon,
+
+				var options = {
+					title: params.place.name,
+					position: params.place.geometry.location,
+					map: self.gMap
+				}
+
+				if ( params.markerURL ) {
+					options.icon = {
+						url:params.markerURL,
 						scaledSize: new google.maps.Size(50,50)
 					}
 				}
-				if (!opts.icon) {delete localOpts.icon;}
-				return new google.maps.Marker(localOpts);
+				return new google.maps.Marker(options);
 			},
 		};
 		return Mapstractor;

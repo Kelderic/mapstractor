@@ -85,20 +85,20 @@
 					self.updateLocation(place);
 				});
 			},
-			addSearchbox: function(location) {
+			addSearchbox: function(opts) {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
 				// Create the html button element.
-				var searchInputElement = self._createSearchInput(location);
-				var searchButtonElement = self._createSearchButton(location);
+				var searchInputElement = self._createSearchInput(opts.location);
+				var searchButtonElement = self._createSearchButton(opts.location);
 				//Setup the button as a Google maps element.
-				self._setupSearchbox(searchInputElement,searchButtonElement);
+				self._setupSearchbox(searchInputElement, searchButtonElement);
 			},
-			addShareLocationButton: function(location) {
+			addShareLocationButton: function(opts) {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
 				// Create the html button element.
-				var shareLocationButtonElement = self._createShareLocationButton(location);
+				var shareLocationButtonElement = self._createShareLocationButton(opts.location);
 				//Setup the button as a Google maps element.
 				self._setupShareLocationButton(shareLocationButtonElement);
 			},
@@ -255,7 +255,7 @@
 					});
 				});
 			},
-			_setupSearchbox: function(searchInputElement,searchButtonElement) {
+			_setupSearchbox: function(searchInputElement, searchButtonElement) {
 				// Store this as self, so that it is accessible in sub-functions.
 				var self = this;
 				// Store Search Input so that other functions can access it.

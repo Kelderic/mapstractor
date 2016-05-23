@@ -272,26 +272,19 @@
 
 				// Trigger action when a search is begun (clicking the search button)
 				searchButtonElement.addEventListener('click', function(event) {
-					self._searchAsync(searchInputElement);
+					self._getPlaceFromAutocompleteSuggestions();
 				});
 				// Trigger action when a search is begun (clicking an option from Autocomplete suggestions)
 				searchBox.addListener('place_changed', function() {
-					if ( !self._searchSync(searchBox) ) {
-						self._searchAsync();
+					var place = searchBox.getPlace();
+					if (place.geometry) {
+						self.checkIfPlaceIsInAreas(place);
+					} else {
+						self._getPlaceFromAutocompleteSuggestions();
 					}
 				});
 			},
-			_searchSync: function(searchBox) {
-				var self = this;
-				var place = searchBox.getPlace();
-				if (place.geometry) {
-					self.checkIfPlaceIsInAreas(place);
-					return true;
-				} else {
-					return false;
-				}
-			},
-			_searchAsync: function() {
+			_getPlaceFromAutocompleteSuggestions: function() {
 				var self = this;
 				var geocoder = new google.maps.Geocoder();
 				var autoCompleteList = document.querySelectorAll('.pac-container');
@@ -302,7 +295,7 @@
 				} else {
 					searchText = self.searchInputElement.value;
 				}
-				geocoder.geocode({'address':searchText }, function(results, status) {
+				geocoder.geocode({ 'address': searchText }, function(results, status) {
 					if (status == google.maps.GeocoderStatus.OK) {
 						var place = results[0]; place.name = place.address_components[0].long_name;
 						self.searchInputElement.value = place.formatted_address;

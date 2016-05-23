@@ -94,7 +94,6 @@
 				/* Purpose:   This is the color of the polygon.    */
 				var color = 'color' in params ? params.color : '';
 
-
 				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 
 				var self = this;
@@ -137,21 +136,47 @@
 
 			},
 
-			linkPlaceToPolygon: function(polygon, place) {
+			linkPlaceToPolygon: function(params) {
 
-				// Store this as self, so that it is accessible in sub-functions.
+				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
+
+				/* Variable:  polygon                              */
+				/* Type:      Google Maps Polygon Object           */
+				/* Default:   ''                                   */
+				/* Purpose:   This is a Google Maps polygon object */
+				/*            that will be linked to a place, via  */
+				/*            showing the place when the polygon   */
+				/*            clicked on.                          */
+				var polygon = 'polygon' in params ? params.polygon : '';
+
+				/* Variable:  place                                */
+				/* Type:      Custom Google Maps Place Object      */
+				/* Default:   ''                                   */
+				/* Purpose:   This is a Google Maps place object   */
+				/* Purpose:   that will be shown in an tooltip     */
+				/*            when the linked polygon is clicked.  */
+				var place = 'place' in params ? params.place : '';
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
 				var self = this;
-				// Add an event listener so that when the polygon is triggered, via a real click or a fake click, the specifed place is shown.
+
+				// ADD AN EVENT LISTENER ON THE POLYGON, WHICH WILL TRIGGER
+				// UPDATING LOCATION TO SHOW THE LINKED PLACE. THIS WILL
+				// MOVE THE VIEWPORT TO THE LOCATION AND CREATE A TOOLTIP
+				// SHOWING INFORMATION ABOUT THE PLACE
+
 				polygon.addListener('click', function(){
+					// CHECK TO SEE IF THE CLICK EVENT IS ARTIFICIAL, AND IF IT IS, DON'T
+					// CLEAR ALL MARKERS BECAUSE THEY HAVE ALREADY BEEN CLEARED.
 					if ( self.clickIsArtificial ) {
-						// This is an artificial click event, triggered by a place being
-						// contained in this polygon. Don't clear markers in this case.
 						self.clickIsArtificial = 0;
 					} else {
 						self.clearMarkers();
 					}
 					self.updateLocation(place);
 				});
+
 			},
 
 			addSearchbox: function(params) {

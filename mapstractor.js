@@ -11,7 +11,7 @@
 				var self = this;
 
 				// Set up global variables
-				self.mapWrap = document.getElementById(self.opts.mapWrap); // Hardcoded map wrapper element.
+				self.mapWrap = document.getElementById(self.opts.mapWrapID); // Hardcoded map wrapper element.
 				self.gMap = new google.maps.Map(self._createMapElement(), self.opts.map); // The main Google Map object
 				self.markers = []; // Array that holds all markers
 				self.polygons = []; // Array that holds all polygons

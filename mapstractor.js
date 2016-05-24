@@ -339,7 +339,7 @@
 				/*            as it's location.                    */
 				var place = 'place' in params ? params.place : '';
 
-				/* Variable:  icon                                 */
+				/* Variable:  markerURL                            */
 				/* Type:      String                               */
 				/* Default:   ''                                   */
 				/* Purpose:   This is the URL of the custom image  */
@@ -602,6 +602,24 @@
 				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 
 				var self = this;
+
+				// SETUP VARIABLES FROM PROVIDED PARAMETERS
+
+				/* Variable:  place                                */
+				/* Type:      Custom Google Maps Place Object      */
+				/* Default:   N/A                                  */
+				/* Purpose:   This is a Google Maps place object   */
+				/*            that will be used to create a marker */
+				/*            as it's location.                    */
+				place = place;
+
+				/* Variable:  markerURL                            */
+				/* Type:      String                               */
+				/* Default:   N/A                                  */
+				/* Purpose:   This is the URL of the custom image  */
+				/*            that is being used as the default    */
+				/*            marker.                              */
+				markerURL = markerURL;
 
 				// SET UP THE OPTIONS OBJECT THAT THE GOOGLE JS API MARKER CREATION FUNCTION REQUIRES
 

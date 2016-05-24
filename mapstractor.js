@@ -212,6 +212,10 @@
 				var searchInputElement = self._createHTML({tagName:'input', placeholder: 'Search for City, State, or Zip Code...', location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
 				var searchButtonElement = self._createHTML({tagName:'button', innerHTML: searchButtonIcon, location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
 
+				// STORE THE SEARCH INPUT AS A GOLBAL SO THAT OTHER FUNCTIONS CAN ACCESS IT
+
+				self.searchInputElement = searchInputElement;
+
 				// SET UP THE ELEMENTS WITH THE GOOGLE JS API
 
 				self._setupSearchbox(searchInputElement, searchButtonElement, callback);
@@ -595,25 +599,78 @@
 			},
 
 			_setupSearchbox: function(searchInputElement, searchButtonElement, callback) {
-				// Store this as self, so that it is accessible in sub-functions.
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
 				var self = this;
-				// Store Search Input so that other functions can access it.
-				self.searchInputElement = searchInputElement;
-				// Set options for autoComplete. We are just allowing regions (cities, states, zip codes, etc) in the United States.
-				var options = {types: ['(regions)'], componentRestrictions: {country: 'us'} };
-				// Create official searchbox and search button API constructs.
+
+				// SETUP VARIABLES FROM PROVIDED PARAMETERS
+
+				/* Variable:  searchInputElement                   */
+				/* Type:      HTML Element                         */
+				/* Default:   N/A                                  */
+				/* Purpose:   This is the HTML input element that  */
+				/*            is going to be turned in a Google    */
+				/*            Autocomplete search box.             */
+				searchInputElement = searchInputElement;
+
+				/* Variable:  searchButtonElement                  */
+				/* Type:      HTML Element                         */
+				/* Default:   N/A                                  */
+				/* Purpose:   This is the HTML button element that */
+				/*            has a magnifying glass icon, beside  */
+				/*            the search input. Clicking on it     */
+				/*            triggers the browser to search for   */
+				/*            a place.                             */
+				searchButtonElement = searchButtonElement;
+
+				/* Variable:  callback                             */
+				/* Type:      function                             */
+				/* Default:   N/A                                  */
+				/* Purpose:   This function is the callback which  */
+				/*            is called when the search finds a    */
+				/*            place successfully.                  */
+				callback = callback;			
+
+				/* Variable:  options                              */
+				/* Type:      Object                               */
+				/* Default:   N/A                                  */
+				/* Purpose:   This object holds options for the    */
+				/*            Google autoComplete functionality.   */
+				/*            Currently, only regions (cities,     */
+				/*            states, zip codes, etc) in the       */
+				/*            United States. are allowed.          */
+				/*            @Todo:                               */
+				/*            Allow the this to be an option that  */
+				/*            the user can specify when calling    */
+				/*            Mapstractor.                         */
+				var options = {
+					types: ['(regions)'],
+					componentRestrictions: {country: 'us'}
+				};
+
+				// CREATE OFFICIAL SEARCHBOX GOOGLE API CONSTRUCT
+
 				var searchBox = new google.maps.places.Autocomplete(searchInputElement, options);
 
-				// Trigger action when map is moved.
+				// ADD EVENT LISTENER FOR MAP MOVING, TO TRIGGER UPDATING THE MAP BOUNDS
+
 				self.gMap.addListener('bounds_changed', function() {
 					searchBox.setBounds(self.gMap.getBounds());
 				});
 
-				// Trigger action when a search is begun (clicking the search button)
+				// ADD EVENT LISTENER WHEN THE SEARCH BUTTON IS CLICKED ON, TO TRIGGER
+				// GETTING THE PLACE FROM THE AUTOCOMPLETE LIST MANUALLY AND THEN SEARCHING
+				// FOR THAT PLACE
+
 				searchButtonElement.addEventListener('click', function(event) {
 					self._getPlaceFromAutocompleteSuggestions(callback);
 				});
-				// Trigger action when a search is begun (clicking an option from Autocomplete suggestions)
+
+
+				// TRIGGER ACTION WHEN A SEARCH IS BEGUN VIA THE place_changed EVENT (CLICKING
+				// AN OPTION FROM THE AUTOCOMPLETE SUGGESTIONS)IS CLICKED
+
 				searchBox.addListener('place_changed', function() {
 					var place = searchBox.getPlace();
 					if (place.geometry) {
@@ -622,19 +679,48 @@
 						self._getPlaceFromAutocompleteSuggestions(callback);
 					}
 				});
+
 			},
 
 			_getPlaceFromAutocompleteSuggestions: function(callback) {
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
 				var self = this;
+
+				// SETUP VARIABLES FROM PROVIDED PARAMETERS
+
+				/* Variable:  callback                             */
+				/* Type:      function                             */
+				/* Default:   N/A                                  */
+				/* Purpose:   This function is the callback which  */
+				/*            is called when the search finds a    */
+				/*            place successfully.                  */
+				callback = callback;			
+
+				// CREATE A GEOCODER USING GOOGLE JS API
+
 				var geocoder = new google.maps.Geocoder();
+
+				// GRAB THE DOM ELEMENT CONTAINING THE CURRENT AUTOCOMPLETE LIST
+
 				var autoCompleteList = document.querySelectorAll('.pac-container');
-				var searchText = '';
+
+				// CHECK TO SEE IF THE AUTOCOMPLETE LIST IS CURRENTLY VISIBLE. IF IT IS, THEN
+				// GRAB THE FIRST ELEMENT FROM THAT LIST, AND GET THE TEXT CONTENT. IF IT IS
+				// NOT VISIBLE, THERE WILL BE TEXT IN THE PRIMARY SEARCH INPUT ELEMENT. GRAB
+				// THAT INSTEAD.
+
 				if ( autoCompleteList[0].style.display != 'none' ) {
 					var firstResult = document.querySelectorAll('.pac-item:first-child');
-					searchText = firstResult[0].textContent;
+					var searchText = firstResult[0].textContent;
 				} else {
-					searchText = self.searchInputElement.value;
+					var searchText = self.searchInputElement.value;
 				}
+
+				// USE THE GOOGLE GEOCODER TO SEARCH FOR THE TEXT RETRIEVED ABOVE, AND FROM IT
+				// GET A GOOGLE PLACE CONSTRUCT. RUN THE CALLBACK FUNCTION ON THAT PLACE.
+
 				geocoder.geocode({ 'address': searchText }, function(results, status) {
 					if (status == google.maps.GeocoderStatus.OK) {
 						var place = results[0]; place.name = place.address_components[0].long_name;
@@ -642,6 +728,7 @@
 						callback(place);
 					}
 				});
+
 			},
 
 			_createMarker: function(place, markerURL) {

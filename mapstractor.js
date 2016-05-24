@@ -54,13 +54,13 @@
 				self.polygons = [];
 
 
-				/* Variable:  clickIsArtificial                    */
+				/* Variable:  eventIsArtificial                    */
 				/* Type:      Boolean                              */
 				/* Default:   false                                */
 				/* Purpose:   This is a boolean which can be used  */
 				/*            when firing an event to store that   */
 				/*            the event is artificial.             */
-				self.clickIsArtificial = false;
+				self.eventIsArtificial = false;
 
 				// CREATE UI WRAPPERS AND OVERLAY
 
@@ -216,8 +216,8 @@
 				polygon.addListener('click', function(){
 					// CHECK TO SEE IF THE CLICK EVENT IS ARTIFICIAL, AND IF IT IS, DON'T
 					// CLEAR ALL MARKERS BECAUSE THEY HAVE ALREADY BEEN CLEARED.
-					if ( self.clickIsArtificial ) {
-						self.clickIsArtificial = false;
+					if ( self.eventIsArtificial ) {
+						self.eventIsArtificial = false;
 					} else {
 						self.clearMarkers();
 					}

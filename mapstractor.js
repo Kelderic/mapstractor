@@ -12,40 +12,86 @@
 			/***************************************/
 
 			init: function() {
-				// Store this as self, so that it is accessible in sub-functions.
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
 				var self = this;
 
-				// Set up global variables
-				self.mapWrap = document.getElementById(self.opts.mapWrapID); // Hardcoded map wrapper element.
-				self.mapWrap.style.position = 'relative'; // Insure that this wrapper element is relatively positioned.
-				self.gMap = new google.maps.Map(self._createHTML({styles: {height:'100%'}}), self.opts.map); // The main Google Map object
-				self.markers = []; // Array that holds all markers
-				self.polygons = []; // Array that holds all polygons
-				self.searchInputElement = null; // The search text input element
-				self.clickIsArtificial = 0; // A boolean that marks whether a click event on polygons is real or artificial
-				self.clickingTimout = null; // Timeout to prevent double clicks from triggering the click event on the main map.
+				// SETUP GLOBAL VARIABLES
 
-				// Create UI wrapper locations and overlay
+				/* Variable:  mapWrap                              */
+				/* Type:      HTML Element                         */
+				/* Default:   N/A (Required)                       */
+				/* Purpose:   This is an element that is hardcoded */
+				/*            on the page, which Mapstractor will  */
+				/*            use as an outer wrapper for the map  */
+				self.mapWrap = document.getElementById(self.opts.mapWrapID);
+				// Ensure that this wrapper element is relatively positioned.
+				self.mapWrap.style.position = 'relative';
+
+				/* Variable:  gMap                                 */
+				/* Type:      Google Map Object                    */
+				/* Default:   N/A                                  */
+				/* Purpose:   This is the main map object/element. */
+				/*            An HTML element is created and then  */
+				/*            converted into a Google Maps object. */
+				self.gMap = new google.maps.Map(self._createHTML({styles: {height:'100%'}}), self.opts.map);
+
+				/* Variable:  markers                              */
+				/* Type:      Array                                */
+				/* Default:   []                                   */
+				/* Purpose:   This is an array which holds all     */
+				/*            markers which are currently on the   */
+				/*            map.                                 */
+				self.markers = [];
+
+				/* Variable:  polygons                             */
+				/* Type:      Array                                */
+				/* Default:   []                                   */
+				/* Purpose:   This is an array which holds all     */
+				/*            polygons which are currently on the  */
+				/*            map.                                 */
+				self.polygons = [];
+
+
+				/* Variable:  clickIsArtificial                    */
+				/* Type:      Boolean                              */
+				/* Default:   false                                */
+				/* Purpose:   This is a boolean which can be used  */
+				/*            when firing an event to store that   */
+				/*            the event is artificial.             */
+				self.clickIsArtificial = false;
+
+				// CREATE UI WRAPPERS AND OVERLAY
+
 				self._createUIWrappers();
 				self._createOverlay();
 
-				// Add click listeners to the map object. Use a timeout to ensure that double clicks aren't counted.
+				// ADD CLICK LISTENERS TO THE MAP OBJECT. USE A TIMEOUT TO ENSURE THAT
+				// DOUBLE CLICKS ARE COUNTED.
+
+				var clickingTimout;
+
 				self.gMap.addListener('click', function(){
-					self.clickingTimout = setTimeout(function(){
+					clickingTimout = setTimeout(function(){
 						self.clearMarkers();
 						self.searchInputElement.value = '';
 						document.activeElement.blur();
 					}, 200);
 				});
+
 				self.gMap.addListener('dblclick', function(){
-					clearTimeout(self.clickingTimout);
+					clearTimeout(clickingTimout);
 				});
 
-				// Clear the overlay when the map is finished loading
-				self.gMap.addListener('idle',function() {
+				// WHEN THE MAP IS FINISHED WITH ALL INITIALIZATION, CLEAR THE OVERLAY,
+				// THEN REMOVE THIS EVENT LISTENER FOR PERFORMANCE
+				
+				self.gMap.addListener('idle', function() {
 					self.overlay.className = '';
 					google.maps.event.clearListeners(self.gMap, 'idle');
 				});
+
 			},
 
 			/***************************************/
@@ -171,7 +217,7 @@
 					// CHECK TO SEE IF THE CLICK EVENT IS ARTIFICIAL, AND IF IT IS, DON'T
 					// CLEAR ALL MARKERS BECAUSE THEY HAVE ALREADY BEEN CLEARED.
 					if ( self.clickIsArtificial ) {
-						self.clickIsArtificial = 0;
+						self.clickIsArtificial = false;
 					} else {
 						self.clearMarkers();
 					}

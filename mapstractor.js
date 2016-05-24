@@ -54,6 +54,10 @@
 
 			addKmlLayer: function(params) {
 
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
+				var self = this;
+
 				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
 
 				/* Variable:  fileURL                              */
@@ -63,10 +67,6 @@
 				/*            is going to be added to the map. It  */
 				/*            is a required parameter.             */
 				var fileURL = 'fileURL' in params ? params.fileURL : '';
-
-				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-				var self = this;
 
 				// CREATE KML LAYER ON THE MAP
 
@@ -78,6 +78,10 @@
 			},
 
 			addPolygon: function(params) {
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
+				var self = this;
 
 				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
 
@@ -94,10 +98,6 @@
 				/* Default:   ''                                   */
 				/* Purpose:   This is the color of the polygon.    */
 				var color = 'color' in params ? params.color : '';
-
-				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-				var self = this;
 
 				// DECODE THE ENCODED COORDIATES
 
@@ -139,6 +139,10 @@
 
 			linkPlaceToPolygon: function(params) {
 
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
+				var self = this;
+
 				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
 
 				/* Variable:  polygon                              */
@@ -157,10 +161,6 @@
 				/*            that will be shown in an infobox     */
 				/*            when the linked polygon is clicked.  */
 				var place = 'place' in params ? params.place : '';
-
-				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-				var self = this;
 
 				// ADD AN EVENT LISTENER ON THE POLYGON, WHICH WILL TRIGGER
 				// UPDATING LOCATION TO SHOW THE LINKED PLACE. THIS WILL
@@ -185,6 +185,10 @@
 
 			addSearchbox: function(params) {
 
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
+				var self = this;
+
 				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
 
 				/* Variable:  location                             */
@@ -202,10 +206,6 @@
 				/*            place successfully.                  */
 				var callback = 'callback' in params ? params.callback : function(){};
 
-				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-				var self = this;
-
 				// CREATE THE HTML ELEMENTS
 
 				var searchButtonIcon = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 485.213 485.213"><path d="M471.882,407.567L360.567,296.243c-16.586,25.795-38.536,47.734-64.331,64.321l111.324,111.324 c17.772,17.768,46.587,17.768,64.321,0C489.654,454.149,489.654,425.334,471.882,407.567z"/><path d="M363.909,181.955C363.909,81.473,282.44,0,181.956,0C81.474,0,0.001,81.473,0.001,181.955s81.473,181.951,181.955,181.951 C282.44,363.906,363.909,282.437,363.909,181.955z M181.956,318.416c-75.252,0-136.465-61.208-136.465-136.46 c0-75.252,61.213-136.465,136.465-136.465c75.25,0,136.468,61.213,136.468,136.465 C318.424,257.208,257.206,318.416,181.956,318.416z"/><path d="M75.817,181.955h30.322c0-41.803,34.014-75.814,75.816-75.814V75.816C123.438,75.816,75.817,123.437,75.817,181.955z"/></svg>';
@@ -219,6 +219,10 @@
 			},
 
 			addShareLocationButton: function(params) {
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
+				var self = this;
 
 				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
 
@@ -237,10 +241,6 @@
 				/*            place successfully.                  */
 				var callback = 'callback' in params ? params.callback : function(){};
 
-				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-				var self = this;
-
 				// CREATE THE HTML ELEMENTS
 
 				var shareLocationButtonIcon = '<svg baseProfile="full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M12 54 L0 54 L0 46 L 12 46 A 40 40, 0, 0, 1, 46 12 L 46 0 L 54 0 L 54 12 A 40 40, 0, 0, 1, 88 46 L 100 46 L 100 54 L 88 54 A 40 40, 0, 0, 1, 54 88 L 54 100 L 46 100 L 46 88 A 40 40, 0, 0, 1, 12 54 L 20 50 A 30 30, 0, 0, 0, 80 50 A 30 30, 0, 0, 0, 20 50 Z" /><path d="M28 50 A 22 22, 0, 0, 0, 72 50 A 22 22, 0, 0, 0, 28 50 Z" /></svg>';
@@ -253,6 +253,10 @@
 
 			updateLocation: function(params) {
 
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
+				var self = this;
+
 				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
 
 				/* Variable:  place                                */
@@ -261,10 +265,6 @@
 				/* Purpose:   This is a Google Maps place object   */
 				/*            that the map will focused on.        */
 				var place = 'place' in params ? params.place : '';
-
-				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-				var self = this;
 
 				// ADD NEW MARKER
 
@@ -283,6 +283,10 @@
 
 			updateViewport: function(params) {
 
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
+				var self = this;
+
 				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
 
 				/* Variable:  place                                */
@@ -291,10 +295,6 @@
 				/* Purpose:   This is a Google Maps place object   */
 				/*            that the viewport will focused on.   */
 				var place = 'place' in params ? params.place : '';
-
-				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-				var self = this;
 
 				// MOVE THE VIEWPORT TO THE SPECIFIED PLACE. ( .fitbounds() IS THE TYPICAL
 				// WAY OF DOING THIS. THIS WAY ALLOWS FOR CONTROL OVER THE ZOOM LEVLEL AND
@@ -325,6 +325,10 @@
 
 			addMarker: function(params) {
 
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
+				var self = this;
+
 				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
 
 				/* Variable:  place                                */
@@ -342,10 +346,6 @@
 				/*            that is being used as the default    */
 				/*            marker.                              */
 				var markerURL = 'markerURL' in params ? params.markerURL : '';
-
-				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-				var self = this;
 
 				// CREATE A GOOGLE MAPS MARKER OBJECT USING THE PROVIDED PLACE AND OPTIONAL MARKER URL INFO
 

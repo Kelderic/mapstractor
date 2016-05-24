@@ -17,14 +17,15 @@
 
 				// Set up global variables
 				self.mapWrap = document.getElementById(self.opts.mapWrapID); // Hardcoded map wrapper element.
-				self.gMap = new google.maps.Map(self._createMapElement(), self.opts.map); // The main Google Map object
+				self.mapWrap.style.position = 'relative'; // Insure that this wrapper element is relatively positioned.
+				self.gMap = new google.maps.Map(self._createHTML({styles: {height:'100%'}}), self.opts.map); // The main Google Map object
 				self.markers = []; // Array that holds all markers
 				self.polygons = []; // Array that holds all polygons
 				self.searchInputElement = null; // The search text input element
 				self.clickIsArtificial = 0; // A boolean that marks whether a click event on polygons is real or artificial
 				self.clickingTimout = null; // Timeout to prevent double clicks from triggering the click event on the main map.
 
-				// Call initiation functions.
+				// Create UI wrapper locations and overlay
 				self._createUIWrappers();
 				self._createOverlay();
 
@@ -207,8 +208,9 @@
 
 				// CREATE THE HTML ELEMENTS
 
-				var searchInputElement = self._createSearchInput(location);
-				var searchButtonElement = self._createSearchButton(location);
+				var searchButtonIcon = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 485.213 485.213"><path d="M471.882,407.567L360.567,296.243c-16.586,25.795-38.536,47.734-64.331,64.321l111.324,111.324 c17.772,17.768,46.587,17.768,64.321,0C489.654,454.149,489.654,425.334,471.882,407.567z"/><path d="M363.909,181.955C363.909,81.473,282.44,0,181.956,0C81.474,0,0.001,81.473,0.001,181.955s81.473,181.951,181.955,181.951 C282.44,363.906,363.909,282.437,363.909,181.955z M181.956,318.416c-75.252,0-136.465-61.208-136.465-136.46 c0-75.252,61.213-136.465,136.465-136.465c75.25,0,136.468,61.213,136.468,136.465 C318.424,257.208,257.206,318.416,181.956,318.416z"/><path d="M75.817,181.955h30.322c0-41.803,34.014-75.814,75.816-75.814V75.816C123.438,75.816,75.817,123.437,75.817,181.955z"/></svg>';
+				var searchInputElement = self._createHTML({tagName:'input', placeholder: 'Search for City, State, or Zip Code...', location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
+				var searchButtonElement = self._createHTML({tagName:'button', innerHTML: searchButtonIcon, location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
 
 				// SET UP THE ELEMENTS WITH THE GOOGLE JS API
 
@@ -241,7 +243,8 @@
 
 				// CREATE THE HTML ELEMENTS
 
-				var shareLocationButtonElement = self._createShareLocationButton(location);
+				var shareLocationButtonIcon = '<svg baseProfile="full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M12 54 L0 54 L0 46 L 12 46 A 40 40, 0, 0, 1, 46 12 L 46 0 L 54 0 L 54 12 A 40 40, 0, 0, 1, 88 46 L 100 46 L 100 54 L 88 54 A 40 40, 0, 0, 1, 54 88 L 54 100 L 46 100 L 46 88 A 40 40, 0, 0, 1, 12 54 L 20 50 A 30 30, 0, 0, 0, 80 50 A 30 30, 0, 0, 0, 20 50 Z" /><path d="M28 50 A 22 22, 0, 0, 0, 72 50 A 22 22, 0, 0, 0, 28 50 Z" /></svg>';
+				var shareLocationButtonElement = self._createHTML({tagName:'button', innerHTML: shareLocationButtonIcon, location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
 
 				// SET UP THE ELEMENTS WITH THE GOOGLE JS API
 
@@ -377,97 +380,141 @@
 			/********** PRIVATE FUNCTIONS **********/
 			/***************************************/
 
-			_createMapElement: function() {
-				// Store this as self, so that it is accessible in sub-functions.
+			_createUIWrappers: function() {
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
 				var self = this;
-				// Create html
-				var element = document.createElement('div');
-					element.style.height = '100%';
-				self.mapWrap.appendChild(element);
-				return element;
+
+				// SET UP OBJECT WITH ALL DESIRED WRAPPER LOCATIONS
+
+				var wrappers = [
+					{position: 'TOP_LEFT', class: 'controls left'},
+					{position: 'LEFT_TOP', class: 'controls left'},
+					{position: 'BOTTOM_LEFT', class: 'controls left'},
+					{position: 'LEFT_BOTTOM', class: 'controls left'},
+					{position: 'TOP_RIGHT', class: 'controls right'},
+					{position: 'RIGHT_TOP', class: 'controls right'},
+					{position: 'BOTTOM_RIGHT', class: 'controls right'},
+					{position: 'RIGHT_BOTTOM', class: 'controls right'},
+				]
+
+				// LOOP THROUGH WRAPPER OBJECT AND CREATE WRAPPER ELEMENTS
+
+				for ( var i=0, l=wrappers.length; i<l; i++ ) {
+					self.gMap.controls[google.maps.ControlPosition[wrappers[i].position]].push(self._createHTML({className: wrappers[i].class}));
+				}
+
 			},
 
 			_createOverlay: function() {
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
 				var self = this;
-				// Create HTML elements
-				var overlayHTML = document.createElement('div');
-				var faderHTML = document.createElement('svg');
-				var loaderHTML = document.createElement('div');
-				var spanHTML = document.createElement('span');
-				var text = document.createTextNode('Starting up...');
-				// Add attributes and content to elements
-				overlayHTML.id = 'overlay';
-				overlayHTML.className = 'loading';
-				spanHTML.appendChild(text);
-				// Assemble final overlay element
-				overlayHTML.appendChild(faderHTML);
-				overlayHTML.appendChild(loaderHTML);
-				overlayHTML.appendChild(spanHTML);
-				// Confirm that the map wrapper is relatively positioned to contain the overlay, just in case it's not already.
-				self.mapWrap.style.position = 'relative';
-				// Insert the overlay element.
-				self.mapWrap.insertBefore(overlayHTML, self.mapWrap.firstElementChild);
-				self.overlay = document.getElementById('overlay');
+
+				// CREATE THE WRAPPER ELEMENT AND PLACE IT ON THE MAP, THEN STORE IT IN A GLOBAL
+
+				self.overlay = self._createHTML({id:'overlay', className:'loading', innerHTML:'<svg></svg><div></div><span>Starting up...</span>', });
+
 			},
 
-			_createUIWrappers: function() {
-				// Store this as self, so that it is accessible in sub-functions.
-				var self = this;
-				// Create and position all control UI wrapper areas that are on the left side.
-				self.gMap.controls[google.maps.ControlPosition.TOP_LEFT].push(self._createUIWrapper('controls left'));
-				self.gMap.controls[google.maps.ControlPosition.LEFT_TOP].push(self._createUIWrapper('controls left'));
-				self.gMap.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(self._createUIWrapper('controls left'));
-				self.gMap.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(self._createUIWrapper('controls left'));
-				// Create and position all control UI wrapper areas that are on the right side.
-				self.gMap.controls[google.maps.ControlPosition.TOP_RIGHT].push(self._createUIWrapper('controls right'));
-				self.gMap.controls[google.maps.ControlPosition.RIGHT_TOP].push(self._createUIWrapper('controls right'));
-				self.gMap.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(self._createUIWrapper('controls right'));
-				self.gMap.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(self._createUIWrapper('controls right'));
-			},
+			_createHTML: function(params) {
 
-			_createUIWrapper(className) {
-				// Store this as self, so that it is accessible in sub-functions.
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
 				var self = this;
-				// Create html
-				var element = document.createElement('div');
-					element.className = className;
-				self.mapWrap.appendChild(element);
+
+				// SETUP VARIABLES FROM PROVIDED PARAMETERS
+
+				/* Variable:  tagName                              */
+				/* Type:      String                               */
+				/* Default:   'div'                                */
+				/* Purpose:   This is the tagName of the element   */
+				/*            that is being created.               */
+				var tagName = 'tagName' in params ? params.tagName : 'div';
+
+				/* Variable:  id                                   */
+				/* Type:      String                               */
+				/* Default:   ''                                   */
+				/* Purpose:   This is the id of the element that   */
+				/*            is being created.                    */
+				var id = 'id' in params ? params.id : '';
+
+				/* Variable:  className                            */
+				/* Type:      String                               */
+				/* Default:   ''                                   */
+				/* Purpose:   This is the list of classes of the   */
+				/*            element that is being created.       */
+				var className = 'className' in params ? params.className : '';
+
+				/* Variable:  type                                 */
+				/* Type:      String                               */
+				/* Default:   '' | 'text'                          */
+				/* Purpose:   This is the type attribute, only     */
+				/*            used if the tagName is 'input'       */
+				var type = 'type' in params ? params.type : ( tagName == 'input' ? 'text' : '' );
+
+				/* Variable:  placeholder                          */
+				/* Type:      String                               */
+				/* Default:   ''                                   */
+				/* Purpose:   This is the placeholder attribute,   */
+				/*            used if the tagName is 'input' or    */
+				/*            textarea.                            */
+				var placeholder = 'placeholder' in params ? params.placeholder : '';
+
+				/* Variable:  style                                */
+				/* Type:      String                               */
+				/* Default:   ''                                   */
+				/* Purpose:   This is an object containing any     */
+				/*            styles that should be hardcoded on   */
+				/*            the element that is being created.   */
+				var styles = 'styles' in params ? params.styles : {};
+
+				/* Variable:  innerHTML                            */
+				/* Type:      String                               */
+				/* Default:   ''                                   */
+				/* Purpose:   This is the HTML content that will   */
+				/*            be placed inside the created element */
+				/*            using .innerHTML().                  */
+				var innerHTML = 'innerHTML' in params ? params.innerHTML : '';
+
+				/* Variable:  location                             */
+				/* Type:      HTML Element                         */
+				/* Default:   self.mapWrap                         */
+				/* Purpose:   This function is the callback which  */
+				/*            is called after the element has been */
+				/*            successfully created.                */
+				var location = 'location' in params ? params.location : self.mapWrap;
+
+				// CREATE HTML ELEMENT
+
+				var element = document.createElement(tagName);
+
+				element.id = id;
+				element.className = className;
+				if ( tagName == 'input' || tagName == 'textarea' ) {
+					element.placeholder = placeholder;
+					if ( tagName == 'input' ) {
+						element.type = type;
+					}
+				}
+				for (var style in styles) {
+					if (styles.hasOwnProperty(style)) {
+						element.style[style] = styles[style];
+					}
+				}
+
+				element.innerHTML = innerHTML;
+
+				// ADD ELEMENT TO PAGE
+
+				location.appendChild(element);
+
+				// RETURN THE MARKER TO THE FUNCTION THAT REQUESTED IT
+
 				return element;
-			},
 
-			_createSearchInput: function(location) {
-				// Store this as self, so that it is accessible in sub-functions.
-				var self = this;
-				// Create html
-				var searchInputElement = document.createElement('input');
-					searchInputElement.id = 'searchinput';
-					searchInputElement.type = 'text';
-					searchInputElement.placeholder = 'Search for City, State, or Zip Code...';
-				self.gMap.controls[google.maps.ControlPosition[location]].j[0].appendChild(searchInputElement);
-				return searchInputElement;
-			},
-
-			_createSearchButton: function(location) {
-				// Store this as self, so that it is accessible in sub-functions.
-				var self = this;
-				// Create html
-				var searchButtonElement = document.createElement('button');
-					searchButtonElement.id = 'searchbutton';
-					searchButtonElement.innerHTML = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 485.213 485.213"><path d="M471.882,407.567L360.567,296.243c-16.586,25.795-38.536,47.734-64.331,64.321l111.324,111.324 c17.772,17.768,46.587,17.768,64.321,0C489.654,454.149,489.654,425.334,471.882,407.567z"/><path d="M363.909,181.955C363.909,81.473,282.44,0,181.956,0C81.474,0,0.001,81.473,0.001,181.955s81.473,181.951,181.955,181.951 C282.44,363.906,363.909,282.437,363.909,181.955z M181.956,318.416c-75.252,0-136.465-61.208-136.465-136.46 c0-75.252,61.213-136.465,136.465-136.465c75.25,0,136.468,61.213,136.468,136.465 C318.424,257.208,257.206,318.416,181.956,318.416z"/><path d="M75.817,181.955h30.322c0-41.803,34.014-75.814,75.816-75.814V75.816C123.438,75.816,75.817,123.437,75.817,181.955z"/></svg>';
-
-				self.gMap.controls[google.maps.ControlPosition[location]].j[0].appendChild(searchButtonElement);
-				return searchButtonElement;
-
-			},
-
-			_createShareLocationButton: function(location) {
-				// Store this as self, so that it is accessible in sub-functions.
-				var self = this;
-				// Create html
-				var shareLocationButtonElement = document.createElement('button');
-					shareLocationButtonElement.innerHTML = '<svg baseProfile="full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M12 54 L0 54 L0 46 L 12 46 A 40 40, 0, 0, 1, 46 12 L 46 0 L 54 0 L 54 12 A 40 40, 0, 0, 1, 88 46 L 100 46 L 100 54 L 88 54 A 40 40, 0, 0, 1, 54 88 L 54 100 L 46 100 L 46 88 A 40 40, 0, 0, 1, 12 54 L 20 50 A 30 30, 0, 0, 0, 80 50 A 30 30, 0, 0, 0, 20 50 Z" /><path d="M28 50 A 22 22, 0, 0, 0, 72 50 A 22 22, 0, 0, 0, 28 50 Z" /></svg>';
-				self.gMap.controls[google.maps.ControlPosition[location]].j[0].appendChild(shareLocationButtonElement);
-				return shareLocationButtonElement;
 			},
 
 			_setupShareLocationButton: function(shareLocationButtonElement, callback) {

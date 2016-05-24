@@ -202,7 +202,7 @@
 				/* Type:      Function                             */
 				/* Default:   function(){}                         */
 				/* Purpose:   This function is the callback which  */
-				/*            is called when the searchbox finds a */
+				/*            is called when the search finds a    */
 				/*            place successfully.                  */
 				var callback = 'callback' in params ? params.callback : function(){};
 
@@ -237,7 +237,7 @@
 				/* Type:      function                             */
 				/* Default:   function(){}                         */
 				/* Purpose:   This function is the callback which  */
-				/*            is called when the searchbox finds a */
+				/*            is called when the search finds a    */
 				/*            place successfully.                  */
 				var callback = 'callback' in params ? params.callback : function(){};
 
@@ -482,9 +482,8 @@
 				/* Variable:  location                             */
 				/* Type:      HTML Element                         */
 				/* Default:   self.mapWrap                         */
-				/* Purpose:   This function is the callback which  */
-				/*            is called after the element has been */
-				/*            successfully created.                */
+				/* Purpose:   This is an HTML element that the new */
+				/*            created element will be appended to. */
 				var location = 'location' in params ? params.location : self.mapWrap;
 
 				// CREATE HTML ELEMENT
@@ -518,23 +517,68 @@
 			},
 
 			_setupShareLocationButton: function(shareLocationButtonElement, callback) {
-				// Store this as self, so that it is accessible in sub-functions.
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
 				var self = this;
+
+				// SETUP VARIABLES FROM PROVIDED PARAMETERS
+
+				/* Variable:  shareLocationButtonElement           */
+				/* Type:      HTML Element                         */
+				/* Default:   N/A                                  */
+				/* Purpose:   This is the HTML button element that */
+				/*            triggers the browser to ask the user */
+				/*            to share their geographic location.  */
+				shareLocationButtonElement = shareLocationButtonElement;
+
+				/* Variable:  callback                             */
+				/* Type:      function                             */
+				/* Default:   N/A                                  */
+				/* Purpose:   This function is the callback which  */
+				/*            is called when the search finds a    */
+				/*            place successfully.                  */
+				callback = callback;			
+
+				/* Variable:  timeout                              */
+				/* Type:      Javascript Timeout                   */
+				/* Default:   null                                 */
+				/* Purpose:   This holds a javascript timeout that */
+				/*            is set when the share location       */
+				/*            button is clicked. This is needed    */
+				/*            because Firefox's handling of the    */
+				/*            geolocation API is broken. After 15s */
+				/*            of no response, the overlay will be  */
+				/*            hidden.                              */
 				var timeout;
-				// Trigger action when a share location button is clicked.
+
+				// TRIGGER ACTION WHEN THE SHARE LOCATION BUTTON IS CLICKED
+
 				shareLocationButtonElement.addEventListener('click', function(event) {
+
+					// SHOW THE OVERLAY
+
 					self.overlay.className = 'loading';
 					self.overlay.getElementsByTagName('span')[0].textContent = 'Getting your location...';
+
+					// SET TIMEOUT TO 15s TO PREVENT INIFNITE OVERLAY IF USER DOESN'T
+					// KNOW WHAT TO DO, OR IGNORES PROMPT FROM BROWSER, OR SELECTS "NOT
+					// NOW" WHILE USING FIREFOX.
+
 					timeout = setTimeout(function() {
 						self.overlay.className = '';
 					}, 15000);
+
+					// ATTEMPT TO GET USER'S LOCATION FROM BROWSER
+
 					navigator.geolocation.getCurrentPosition(function(position){
+						// Success
 						var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 						var geocoder = new google.maps.Geocoder();
 						geocoder.geocode({'location':location }, function(results, status) {
 							if (status == google.maps.GeocoderStatus.OK) {
-								self.overlay.className = '';
 								clearTimeout(timeout);
+								self.overlay.className = '';
 								var place = results[0]; place.name = place.address_components[0].long_name;
 								self.searchInputElement.value = place.formatted_address;
 								shareLocationButtonElement.className = shareLocationButtonElement.className + ' active'
@@ -542,9 +586,12 @@
 							}
 						});
 					}, function() {
+						// Failure
 						self.overlay.className = '';
 					});
+
 				});
+
 			},
 
 			_setupSearchbox: function(searchInputElement, searchButtonElement, callback) {

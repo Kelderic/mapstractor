@@ -706,17 +706,12 @@
 
 				var autoCompleteList = document.querySelectorAll('.pac-container');
 
-				// CHECK TO SEE IF THE AUTOCOMPLETE LIST IS CURRENTLY VISIBLE. IF IT IS, THEN
-				// GRAB THE FIRST ELEMENT FROM THAT LIST, AND GET THE TEXT CONTENT. IF IT IS
-				// NOT VISIBLE, THERE WILL BE TEXT IN THE PRIMARY SEARCH INPUT ELEMENT. GRAB
-				// THAT INSTEAD.
 
-				if ( autoCompleteList[0].style.display != 'none' ) {
-					var firstResult = document.querySelectorAll('.pac-item:first-child');
-					var searchText = firstResult[0].textContent;
-				} else {
-					var searchText = self.searchInputElement.value;
-				}
+				// GRAB THE FIRST ELEMENT FROM THE AUTOCOMPLETE LIST, AND GET THE TEXT
+				// CONTENT TO USE TO SEARCH FOR.
+				
+				var firstResult = document.querySelectorAll('.pac-item:first-child');
+				var searchText = firstResult[0].textContent;
 
 				// USE THE GOOGLE GEOCODER TO SEARCH FOR THE TEXT RETRIEVED ABOVE, AND FROM IT
 				// GET A GOOGLE PLACE CONSTRUCT. RUN THE CALLBACK FUNCTION ON THAT PLACE.

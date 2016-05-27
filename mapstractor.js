@@ -683,16 +683,20 @@
 				/* Default:   N/A                                  */
 				/* Purpose:   This object holds options for the    */
 				/*            Google autoComplete functionality.   */
-				/*            Currently, only regions (cities,     */
+				/*            Previously, only regions (cities,    */
 				/*            states, zip codes, etc) in the       */
-				/*            United States. are allowed.          */
+				/*            United States were allowed. Now, the */
+				/*            object is empty to allow for more    */
+				/*            flexiblity. The previous options are */
+				/*            left as comments, as examples for    */
+				/*            future extension.                    */
 				/*            @Todo:                               */
 				/*            Allow the this to be an option that  */
 				/*            the user can specify when calling    */
 				/*            Mapstractor.                         */
 				var options = {
-					types: ['(regions)'],
-					componentRestrictions: {country: 'us'}
+					//types: ['(regions)'],
+					//componentRestrictions: {country: 'us'}
 				};
 
 				// CREATE OFFICIAL SEARCHBOX GOOGLE API CONSTRUCT

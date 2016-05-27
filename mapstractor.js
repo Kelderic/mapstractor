@@ -822,4 +822,10 @@
 		return Mapstractor;
 	}());
 
+	google.maps.Polygon.prototype.getCenter = function(){
+		var bounds = new google.maps.LatLngBounds()
+		this.getPath().forEach(function(element,index){bounds.extend(element)})
+		return bounds.getCenter();
+	}
+
 }(window, google));

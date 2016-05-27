@@ -767,6 +767,8 @@
 						var place = results[0]; place.name = place.address_components[0].long_name;
 						self.searchInputElement.value = place.formatted_address;
 						callback(place);
+					} else {
+						console.log('Geocoding the Place from the autoComplete list failed. The status code is: ' + status);
 					}
 				});
 

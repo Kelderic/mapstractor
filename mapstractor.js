@@ -816,6 +816,7 @@
 				// CREATE THE MARKER OBJECT AND RETURN IT.
 
 				return new google.maps.Marker(options);
+
 			}
 
 		};

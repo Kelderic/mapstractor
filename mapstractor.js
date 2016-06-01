@@ -145,6 +145,14 @@
 				/* Purpose:   This is the color of the polygon.    */
 				var color = 'color' in params ? params.color : '';
 
+				/* Variable:  clickCallback                        */
+				/* Type:      String                               */
+				/* Default:   function(){}                         */
+				/* Purpose:   This function is the callback which  */
+				/*            is called when the polygon registers */
+				/*            a click event.                       */
+				var clickCallback = 'clickCallback' in params ? params.clickCallback : function(){};
+
 				// DECODE THE ENCODED COORDIATES
 
 				var coordinates = google.maps.geometry.encoding.decodePath(encodedCoordinates);
@@ -172,6 +180,7 @@
 				polygon.addListener('mouseout',function(){
 					this.setOptions({fillOpacity: 0.3,strokeWeight:1});
 				});
+				polygon.addListener('click', clickCallback);
 
 				// ADD POLYGON TO ARRAY OF POLYGONS FOR REFERENCE BY OTHER FUNCTIONS
 

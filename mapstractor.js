@@ -323,6 +323,7 @@
 						marker.setMap(null);
 					});
 
+					// DELETE MARKERS FROM MARKER RECORDS ARRAY
 
 					self.markers = [];
 

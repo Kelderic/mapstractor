@@ -317,13 +317,16 @@
 
 				// REMOVE ALL MARKERS FROM THE MAP
 
-				self.markers.forEach(function(marker) {
-					marker.setMap(null);
-				});
+				if ( self.markers.length > 0 ) {
 
-				// DELETE MARKERS
+					self.markers.forEach(function(marker) {
+						marker.setMap(null);
+					});
 
-				self.markers = [];
+
+					self.markers = [];
+
+				}
 
 			},
 

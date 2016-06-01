@@ -172,7 +172,7 @@
 
 				polygon.setMap(self.gMap);
 
-				// ADD EVENT LISTENERS TO POLYGON TO SHOW HOVER EFFECT
+				// ADD EVENT LISTENERS TO POLYGON
 
 				polygon.addListener('mouseover',function(){
 					this.setOptions({fillOpacity: 0.4, strokeWeight:2});

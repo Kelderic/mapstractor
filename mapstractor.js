@@ -183,52 +183,6 @@
 
 			},
 
-			linkPlaceToPolygon: function(params) {
-
-				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-				var self = this;
-
-				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
-
-				/* Variable:  polygon                              */
-				/* Type:      Google Maps Polygon Object           */
-				/* Default:   ''                                   */
-				/* Purpose:   This is a Google Maps polygon object */
-				/*            that will be linked to a place, via  */
-				/*            showing the place when the polygon   */
-				/*            clicked on.                          */
-				var polygon = 'polygon' in params ? params.polygon : '';
-
-				/* Variable:  place                                */
-				/* Type:      Custom Google Maps Place Object      */
-				/* Default:   ''                                   */
-				/* Purpose:   This is a Google Maps place object   */
-				/*            that will be shown in an infobox     */
-				/*            when the linked polygon is clicked.  */
-				var place = 'place' in params ? params.place : '';
-
-				// ADD AN EVENT LISTENER ON THE POLYGON, WHICH WILL TRIGGER
-				// UPDATING LOCATION TO SHOW THE LINKED PLACE. THIS WILL
-				// MOVE THE VIEWPORT TO THE LOCATION AND CREATE A INFOBOX
-				// SHOWING INFORMATION ABOUT THE PLACE
-
-				polygon.addListener('click', function(){
-					// CHECK TO SEE IF THE CLICK EVENT IS ARTIFICIAL, AND IF IT IS, DON'T
-					// CLEAR ALL MARKERS BECAUSE THEY HAVE ALREADY BEEN CLEARED.
-					if ( self.eventIsArtificial ) {
-						self.eventIsArtificial = false;
-					} else {
-						self.clearMarkers();
-					}
-
-					self.updateLocation({
-						place: place
-					});
-				});
-
-			},
-
 			addSearchbox: function(params) {
 
 				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.

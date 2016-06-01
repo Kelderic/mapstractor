@@ -364,6 +364,14 @@
 				/*            marker.                              */
 				var markerURL = 'markerURL' in params ? params.markerURL : '';
 
+				/* Variable:  clickCallback                        */
+				/* Type:      String                               */
+				/* Default:   function(){}                         */
+				/* Purpose:   This function is the callback which  */
+				/*            is called when the marker registers  */
+				/*            a click event.                       */
+				var clickCallback = 'clickCallback' in params ? params.clickCallback : function(){};
+
 				// CREATE A GOOGLE MAPS MARKER OBJECT USING THE PROVIDED PLACE AND OPTIONAL MARKER URL INFO
 
 				var marker = self._createMarker(place, markerURL);
@@ -386,6 +394,10 @@
 					}
 					infoWindow.open(self.gMap, marker);
 				}
+
+				// ADD EVENT LISTENERS TO MARKER
+
+				marker.addListener('click', clickCallback);
 
 				// RETURN THE MARKER TO THE FUNCTION THAT REQUESTED IT
 

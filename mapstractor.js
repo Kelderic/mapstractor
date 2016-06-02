@@ -222,7 +222,7 @@
 				/*            where the UI element will be placed  */
 				var location = 'location' in params ? params.location : 'TOP_RIGHT';
 
-				/* Variable:  options                              */
+				/* Variable:  searchOptions                        */
 				/* Type:      Object                               */
 				/* Default:   {}                                   */
 				/* Purpose:   This object holds options for the    */
@@ -230,7 +230,7 @@
 				/*            Options include:                     */
 				/*            types:['(regions)']                  */
 				/*            componentRestrictions:{country:'us'} */
-				var options = 'options' in params ? params.options : {};
+				var searchOptions = 'searchOptions' in params ? params.searchOptions : {};
 
 				/* Variable:  showSearchButton                     */
 				/* Type:      Boolean                              */

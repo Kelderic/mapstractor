@@ -223,6 +223,31 @@
 				/*            where the UI element will be placed  */
 				var location = 'location' in params ? params.location : 'TOP_RIGHT';
 
+				/* Variable:  showSearchButton                     */
+				/* Type:      Boolean                              */
+				/* Default:   true                                 */
+				/* Purpose:   This boolean determines whether or   */
+				/*            not the searchbox will have a button */
+				/*            to manually trigger the search.      */
+				var showSearchButton = 'showSearchButton' in params ? params.showSearchButton : true;
+
+				/* Variable:  showSearchSettingsButton             */
+				/* Type:      Boolean                              */
+				/* Default:   true                                 */
+				/* Purpose:   This boolean determines whether or   */
+				/*            not the searchbox will have a button */
+				/*            to show advanced search settings.    */
+				var showSearchSettingsButton = 'showSearchSettingsButton' in params ? params.showSearchSettingsButton : true;
+
+				/* Variable:  showAutocompleteList                 */
+				/* Type:      Boolean                              */
+				/* Default:   true                                 */
+				/* Purpose:   This boolean determines whether or   */
+				/*            not the searchbox will show an       */
+				/*            autocomplete list as the user is     */
+				/*            typing in the search box.            */
+				var showAutocompleteList = 'showAutocompleteList' in params ? params.showAutocompleteList : true;
+
 				/* Variable:  searchCallback                       */
 				/* Type:      Function                             */
 				/* Default:   function(){}                         */

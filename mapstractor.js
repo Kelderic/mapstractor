@@ -223,6 +223,28 @@
 				/*            where the UI element will be placed  */
 				var location = 'location' in params ? params.location : 'TOP_RIGHT';
 
+				/* Variable:  options                              */
+				/* Type:      Object                               */
+				/* Default:   N/A                                  */
+				/* Purpose:   This object holds options for the    */
+				/*            Google autoComplete functionality.   */
+				/*            Previously, only regions (cities,    */
+				/*            states, zip codes, etc) in the       */
+				/*            United States were allowed. Now, the */
+				/*            object is empty to allow for more    */
+				/*            flexiblity. The previous options are */
+				/*            left as comments, as examples for    */
+				/*            future extension.                    */
+				/*            @Todo:                               */
+				/*            Allow the this to be an option that  */
+				/*            the user can specify when calling    */
+				/*            Mapstractor.                         */
+				var options = {
+					//types: ['(regions)'],
+					//componentRestrictions: {country: 'us'}
+				};
+
+
 				/* Variable:  showSearchButton                     */
 				/* Type:      Boolean                              */
 				/* Default:   true                                 */
@@ -256,23 +278,86 @@
 				/*            place successfully.                  */
 				var placefoundCallback = 'placefoundCallback' in params ? params.placefoundCallback : function(){};
 
+				/* Variable:  settingsButtonClickCallback          */
+				/* Type:      Function                             */
+				/* Default:   function(){}                         */
+				/* Purpose:   This function is the callback which  */
+				/*            is called when the search finds a    */
+				/*            place successfully.                  */
+				var settingsButtonClickCallback = 'settingsButtonClickCallback' in params ? params.settingsButtonClickCallback : function(){};
+
 				// CREATE THE HTML CONTROL WRAP
 
 				var searchBoxWrapElement = self._createHTML({tagName:'div', id:'searchBox', className: 'control', styles: {'display':'flex', 'max-width':'100%', 'width':'400px'}, location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
-				
-				// CREATE THE HTML CONTROL ELEMENTS
 
-				var searchSettingsButtonElement = self._createHTML({tagName:'button', location: searchBoxWrapElement, innerHTML: settingsIcon});
-				var searchInputElement = self._createHTML({tagName:'input',  location: searchBoxWrapElement, styles: {'flex':'1'}, placeholder: 'Search for City, State, or Zip Code...'});
-				var searchButtonElement = self._createHTML({tagName:'button', location: searchBoxWrapElement, innerHTML: magnifyingGlassIcon});
+				// IF SEARCH SETTINGS BUTTON IS BEING ADDED
+
+				if ( showSearchSettingsButton ) {
+
+					// CREATE HTML ELEMENT FOR THE BUTTON
+
+					var searchSettingsButtonElement = self._createHTML({tagName:'button', location: searchBoxWrapElement, innerHTML: settingsIcon});
+
+					// ASSIGN IT'S CLICK CALLBACK, WHICH IS USER SPECIFIED
+
+					searchSettingsButtonElement.addEventListener('click', settingsButtonClickCallback);
+
+				}
+
+				// IF SEARCH INPUT IS BEING ADDED, WHICH ISN'T OPTIONAL
+				// (THIS IF STATEMENT IS ADDED FOR VISUAL CONSISTENCY)
+
+				if ( true ) {
+
+					// CREATE HTML ELEMENT FOR SEARCH INPUT
+
+					var searchInputElement = self._createHTML({tagName:'input',  location: searchBoxWrapElement, styles: {'flex':'1'}, placeholder: 'Search for City, State, or Zip Code...'});
+
+					// CREATE OFFICIAL GOOGLE API AUTOCOMPLETE CONSTRUCT WITH SEARCH INPUT
+
+					var gSearchBox = new google.maps.places.Autocomplete(searchInputElement, options);
+
+					// TRIGGER ACTION WHEN A SEARCH IS BEGUN VIA THE place_changed EVENT (CLICKING
+					// AN OPTION FROM THE AUTOCOMPLETE SUGGESTIONS)IS CLICKED
+
+					gSearchBox.addListener('place_changed', function() {
+						var place = gSearchBox.getPlace();
+						if (place.geometry) {
+							placefoundCallback(place);
+						} else {
+							self._getPlaceFromAutocompleteSuggestions(placefoundCallback);
+						}
+					});
+
+					// ADD EVENT LISTENER TO MAP FOR VIEWPORT CHANGE, TO TRIGGER UPDATING THE MAP BOUNDS
+
+					self.gMap.addListener('bounds_changed', function() {
+						gSearchBox.setBounds(self.gMap.getBounds());
+					});
+
+				}
+
+				// IF MANUAL SEARCH TRIGGER BUTTON IS BEING ADDED
+
+				if ( showSearchButton ) {
+
+					// CREATE HTML ELEMENT FOR BUTTON
+
+					var searchButtonElement = self._createHTML({tagName:'button', location: searchBoxWrapElement, innerHTML: magnifyingGlassIcon});
+
+					// ADD EVENT LISTENER WHEN THE SEARCH BUTTON IS CLICKED ON, TO TRIGGER
+					// GETTING THE PLACE FROM THE AUTOCOMPLETE LIST MANUALLY AND THEN SEARCHING
+					// FOR THAT PLACE
+
+					searchButtonElement.addEventListener('click', function(event) {
+						self._getPlaceFromAutocompleteSuggestions(placefoundCallback);
+					});
+
+				}
 
 				// STORE THE SEARCH INPUT AS A GOLBAL SO THAT OTHER FUNCTIONS CAN ACCESS IT
 
 				self.searchInputElement = searchInputElement;
-
-				// SET UP THE ELEMENTS WITH THE GOOGLE JS API
-
-				self._setupSearchbox(searchInputElement, searchButtonElement, placefoundCallback);
 
 			},
 
@@ -677,94 +762,6 @@
 						self.overlay.className = 'overlay';
 					});
 
-				});
-
-			},
-
-			_setupSearchbox: function(searchInputElement, searchButtonElement, callback) {
-
-				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-				var self = this;
-
-				// SETUP VARIABLES FROM PROVIDED PARAMETERS
-
-				/* Variable:  searchInputElement                   */
-				/* Type:      HTML Element                         */
-				/* Default:   N/A                                  */
-				/* Purpose:   This is the HTML input element that  */
-				/*            is going to be turned in a Google    */
-				/*            Autocomplete search box.             */
-				searchInputElement = searchInputElement;
-
-				/* Variable:  searchButtonElement                  */
-				/* Type:      HTML Element                         */
-				/* Default:   N/A                                  */
-				/* Purpose:   This is the HTML button element that */
-				/*            has a magnifying glass icon, beside  */
-				/*            the search input. Clicking on it     */
-				/*            triggers the browser to search for   */
-				/*            a place.                             */
-				searchButtonElement = searchButtonElement;
-
-				/* Variable:  callback                             */
-				/* Type:      function                             */
-				/* Default:   N/A                                  */
-				/* Purpose:   This function is the callback which  */
-				/*            is called when the search finds a    */
-				/*            place successfully.                  */
-				callback = callback;			
-
-				/* Variable:  options                              */
-				/* Type:      Object                               */
-				/* Default:   N/A                                  */
-				/* Purpose:   This object holds options for the    */
-				/*            Google autoComplete functionality.   */
-				/*            Previously, only regions (cities,    */
-				/*            states, zip codes, etc) in the       */
-				/*            United States were allowed. Now, the */
-				/*            object is empty to allow for more    */
-				/*            flexiblity. The previous options are */
-				/*            left as comments, as examples for    */
-				/*            future extension.                    */
-				/*            @Todo:                               */
-				/*            Allow the this to be an option that  */
-				/*            the user can specify when calling    */
-				/*            Mapstractor.                         */
-				var options = {
-					//types: ['(regions)'],
-					//componentRestrictions: {country: 'us'}
-				};
-
-				// CREATE OFFICIAL SEARCHBOX GOOGLE API CONSTRUCT
-
-				var searchBox = new google.maps.places.Autocomplete(searchInputElement, options);
-
-				// ADD EVENT LISTENER FOR MAP MOVING, TO TRIGGER UPDATING THE MAP BOUNDS
-
-				self.gMap.addListener('bounds_changed', function() {
-					searchBox.setBounds(self.gMap.getBounds());
-				});
-
-				// ADD EVENT LISTENER WHEN THE SEARCH BUTTON IS CLICKED ON, TO TRIGGER
-				// GETTING THE PLACE FROM THE AUTOCOMPLETE LIST MANUALLY AND THEN SEARCHING
-				// FOR THAT PLACE
-
-				searchButtonElement.addEventListener('click', function(event) {
-					self._getPlaceFromAutocompleteSuggestions(callback);
-				});
-
-
-				// TRIGGER ACTION WHEN A SEARCH IS BEGUN VIA THE place_changed EVENT (CLICKING
-				// AN OPTION FROM THE AUTOCOMPLETE SUGGESTIONS)IS CLICKED
-
-				searchBox.addListener('place_changed', function() {
-					var place = searchBox.getPlace();
-					if (place.geometry) {
-						callback(place);
-					} else {
-						self._getPlaceFromAutocompleteSuggestions(callback);
-					}
 				});
 
 			},

@@ -382,6 +382,18 @@
 				/*            button.                              */
 				var locationIcon = '<svg baseProfile="full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M12 54 L0 54 L0 46 L 12 46 A 40 40, 0, 0, 1, 46 12 L 46 0 L 54 0 L 54 12 A 40 40, 0, 0, 1, 88 46 L 100 46 L 100 54 L 88 54 A 40 40, 0, 0, 1, 54 88 L 54 100 L 46 100 L 46 88 A 40 40, 0, 0, 1, 12 54 L 20 50 A 30 30, 0, 0, 0, 80 50 A 30 30, 0, 0, 0, 20 50 Z" /><path d="M28 50 A 22 22, 0, 0, 0, 72 50 A 22 22, 0, 0, 0, 28 50 Z" /></svg>';
 
+				/* Variable:  timeout                              */
+				/* Type:      Javascript Timeout                   */
+				/* Default:   null                                 */
+				/* Purpose:   This holds a javascript timeout that */
+				/*            is set when the share location       */
+				/*            button is clicked. This is needed    */
+				/*            because Firefox's handling of the    */
+				/*            geolocation API is broken. After 15s */
+				/*            of no response, the overlay will be  */
+				/*            hidden.                              */
+				var timeout;
+
 				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
 
 				/* Variable:  location                             */
@@ -407,9 +419,46 @@
 
 				var shareLocationButtonElement = self._createHTML({tagName:'button', location: shareLocationWrapElement, innerHTML: locationIcon});
 
-				// SET UP THE ELEMENTS WITH THE GOOGLE JS API
+				// TRIGGER ACTION WHEN THE SHARE LOCATION BUTTON IS CLICKED
 
-				self._setupShareLocationButton(shareLocationButtonElement, placefoundCallback);
+				shareLocationButtonElement.addEventListener('click', function(event) {
+
+					// SHOW THE OVERLAY
+
+					self.overlay.className = 'overlay loading';
+					self.overlay.getElementsByTagName('span')[0].textContent = 'Getting your location...';
+
+					// SET TIMEOUT TO 15s TO PREVENT INIFNITE OVERLAY IF USER DOESN'T
+					// KNOW WHAT TO DO, OR IGNORES PROMPT FROM BROWSER, OR SELECTS "NOT
+					// NOW" WHILE USING FIREFOX.
+
+					timeout = setTimeout(function() {
+						self.overlay.className = 'overlay';
+					}, 15000);
+
+					// ATTEMPT TO GET USER'S LOCATION FROM BROWSER
+
+					navigator.geolocation.getCurrentPosition(function(position){
+						// Success
+						var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+						var geocoder = new google.maps.Geocoder();
+						geocoder.geocode({'location':location }, function(results, status) {
+							if (status == google.maps.GeocoderStatus.OK) {
+								clearTimeout(timeout);
+								self.overlay.className = 'overlay';
+								var place = results[0]; place.name = place.address_components[0].long_name;
+								self.searchInputElement.value = place.formatted_address;
+								shareLocationButtonElement.className = shareLocationButtonElement.className + ' active'
+								placefoundCallback(place);
+							}
+						});
+					}, function() {
+						// Failure
+						self.overlay.className = 'overlay';
+					});
+
+				});
+
 			},
 
 			updateLocation: function(params) {
@@ -690,84 +739,6 @@
 				// RETURN THE MARKER TO THE FUNCTION THAT REQUESTED IT
 
 				return element;
-
-			},
-
-			_setupShareLocationButton: function(shareLocationButtonElement, callback) {
-
-				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-				var self = this;
-
-				// SETUP VARIABLES FROM PROVIDED PARAMETERS
-
-				/* Variable:  shareLocationButtonElement           */
-				/* Type:      HTML Element                         */
-				/* Default:   N/A                                  */
-				/* Purpose:   This is the HTML button element that */
-				/*            triggers the browser to ask the user */
-				/*            to share their geographic location.  */
-				shareLocationButtonElement = shareLocationButtonElement;
-
-				/* Variable:  callback                             */
-				/* Type:      function                             */
-				/* Default:   N/A                                  */
-				/* Purpose:   This function is the callback which  */
-				/*            is called when the search finds a    */
-				/*            place successfully.                  */
-				callback = callback;			
-
-				/* Variable:  timeout                              */
-				/* Type:      Javascript Timeout                   */
-				/* Default:   null                                 */
-				/* Purpose:   This holds a javascript timeout that */
-				/*            is set when the share location       */
-				/*            button is clicked. This is needed    */
-				/*            because Firefox's handling of the    */
-				/*            geolocation API is broken. After 15s */
-				/*            of no response, the overlay will be  */
-				/*            hidden.                              */
-				var timeout;
-
-				// TRIGGER ACTION WHEN THE SHARE LOCATION BUTTON IS CLICKED
-
-				shareLocationButtonElement.addEventListener('click', function(event) {
-
-					// SHOW THE OVERLAY
-
-					self.overlay.className = 'overlay loading';
-					self.overlay.getElementsByTagName('span')[0].textContent = 'Getting your location...';
-
-					// SET TIMEOUT TO 15s TO PREVENT INIFNITE OVERLAY IF USER DOESN'T
-					// KNOW WHAT TO DO, OR IGNORES PROMPT FROM BROWSER, OR SELECTS "NOT
-					// NOW" WHILE USING FIREFOX.
-
-					timeout = setTimeout(function() {
-						self.overlay.className = 'overlay';
-					}, 15000);
-
-					// ATTEMPT TO GET USER'S LOCATION FROM BROWSER
-
-					navigator.geolocation.getCurrentPosition(function(position){
-						// Success
-						var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-						var geocoder = new google.maps.Geocoder();
-						geocoder.geocode({'location':location }, function(results, status) {
-							if (status == google.maps.GeocoderStatus.OK) {
-								clearTimeout(timeout);
-								self.overlay.className = 'overlay';
-								var place = results[0]; place.name = place.address_components[0].long_name;
-								self.searchInputElement.value = place.formatted_address;
-								shareLocationButtonElement.className = shareLocationButtonElement.className + ' active'
-								callback(place);
-							}
-						});
-					}, function() {
-						// Failure
-						self.overlay.className = 'overlay';
-					});
-
-				});
 
 			},
 

@@ -207,13 +207,13 @@
 				/*            where the UI element will be placed  */
 				var location = 'location' in params ? params.location : 'TOP_RIGHT';
 
-				/* Variable:  callback                             */
+				/* Variable:  searchCallback                       */
 				/* Type:      Function                             */
 				/* Default:   function(){}                         */
 				/* Purpose:   This function is the callback which  */
 				/*            is called when the search finds a    */
 				/*            place successfully.                  */
-				var callback = 'callback' in params ? params.callback : function(){};
+				var searchCallback = 'searchCallback' in params ? params.searchCallback : function(){};
 
 				// CREATE THE HTML ELEMENTS
 
@@ -227,7 +227,7 @@
 
 				// SET UP THE ELEMENTS WITH THE GOOGLE JS API
 
-				self._setupSearchbox(searchInputElement, searchButtonElement, callback);
+				self._setupSearchbox(searchInputElement, searchButtonElement, searchCallback);
 
 			},
 

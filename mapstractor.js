@@ -258,12 +258,12 @@
 
 				// CREATE THE HTML CONTROL WRAP
 
-				var searchBoxWrapElement = self._createHTML({tagName:'div', id:'searchBox', className: 'control', styles: {'max-width':'100%', 'width':'400px'}, location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
+				var searchBoxWrapElement = self._createHTML({tagName:'div', id:'searchBox', className: 'control', styles: {'display':'flex', 'max-width':'100%', 'width':'400px'}, location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
 				
 				// CREATE THE HTML CONTROL ELEMENTS
 
 				var searchSettingsButtonElement = self._createHTML({tagName:'button', location: searchBoxWrapElement, innerHTML: settingsIcon});
-				var searchInputElement = self._createHTML({tagName:'input',  location: searchBoxWrapElement, styles: {'width':'calc(100% - 100px)'}, placeholder: 'Search for City, State, or Zip Code...'});
+				var searchInputElement = self._createHTML({tagName:'input',  location: searchBoxWrapElement, styles: {'flex':'1'}, placeholder: 'Search for City, State, or Zip Code...'});
 				var searchButtonElement = self._createHTML({tagName:'button', location: searchBoxWrapElement, innerHTML: magnifyingGlassIcon});
 
 				// STORE THE SEARCH INPUT AS A GOLBAL SO THAT OTHER FUNCTIONS CAN ACCESS IT

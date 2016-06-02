@@ -233,20 +233,20 @@
 
 				/* Variable:  showSearchSettingsButton             */
 				/* Type:      Boolean                              */
-				/* Default:   true                                 */
+				/* Default:   false                                */
 				/* Purpose:   This boolean determines whether or   */
 				/*            not the searchbox will have a button */
 				/*            to show advanced search settings.    */
-				var showSearchSettingsButton = 'showSearchSettingsButton' in params ? params.showSearchSettingsButton : true;
+				var showSearchSettingsButton = 'showSearchSettingsButton' in params ? params.showSearchSettingsButton : false;
 
 				/* Variable:  showAutocompleteList                 */
 				/* Type:      Boolean                              */
-				/* Default:   true                                 */
+				/* Default:   false                                 */
 				/* Purpose:   This boolean determines whether or   */
 				/*            not the searchbox will show an       */
 				/*            autocomplete list as the user is     */
 				/*            typing in the search box.            */
-				var showAutocompleteList = 'showAutocompleteList' in params ? params.showAutocompleteList : true;
+				var showAutocompleteList = 'showAutocompleteList' in params ? params.showAutocompleteList : false;
 
 				/* Variable:  placefoundCallback                       */
 				/* Type:      Function                             */

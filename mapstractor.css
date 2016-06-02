@@ -108,15 +108,15 @@
 
 /* Overlay */
 
-#overlay svg,
-#overlay div,
-#overlay span {
+.overlay svg,
+.overlay div,
+.overlay span {
 	transition:opacity 0.5s;
 	pointer-events:none;
 	opacity:0;
 }
 
-#overlay svg {
+.overlay svg {
 	position:absolute;
 	top:0;
 	left:0;
@@ -126,7 +126,7 @@
 	z-index:99;
 }
 
-#overlay div {
+.overlay div {
 	position: absolute;
 	border:8px solid rgb(77, 144, 254);
 	border-radius:50%;
@@ -138,7 +138,7 @@
 	z-index:100;
 }
 
-#overlay span {
+.overlay span {
 	position:absolute;
 	bottom:30px;
 	left:50%;
@@ -154,12 +154,12 @@
 	font-size:15px;
 }
 
-#overlay.loading svg,
-#overlay.loading span {
+.overlay.loading svg,
+.overlay.loading span {
 	opacity:1;
 	pointer-events:auto;
 }
-#overlay.loading div {
+.overlay.loading div {
 	-webkit-animation: pulsate 1s ease-out;
 					animation: pulsate 1s ease-out;
 	-webkit-animation-iteration-count: infinite;

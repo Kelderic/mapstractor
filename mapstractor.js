@@ -88,7 +88,7 @@
 				// THEN REMOVE THIS EVENT LISTENER FOR PERFORMANCE
 				
 				self.gMap.addListener('idle', function() {
-					self.overlay.className = '';
+					self.overlay.className = 'overlay';
 					google.maps.event.clearListeners(self.gMap, 'idle');
 				});
 
@@ -502,7 +502,7 @@
 
 				// CREATE THE WRAPPER ELEMENT AND PLACE IT ON THE MAP, THEN STORE IT IN A GLOBAL
 
-				self.overlay = self._createHTML({id:'overlay', className:'loading', innerHTML:'<svg></svg><div></div><span>Starting up...</span>', });
+				self.overlay = self._createHTML({className:'overlay loading', innerHTML:'<svg></svg><div></div><span>Starting up...</span>', });
 
 			},
 
@@ -645,7 +645,7 @@
 
 					// SHOW THE OVERLAY
 
-					self.overlay.className = 'loading';
+					self.overlay.className = 'overlay loading';
 					self.overlay.getElementsByTagName('span')[0].textContent = 'Getting your location...';
 
 					// SET TIMEOUT TO 15s TO PREVENT INIFNITE OVERLAY IF USER DOESN'T
@@ -653,7 +653,7 @@
 					// NOW" WHILE USING FIREFOX.
 
 					timeout = setTimeout(function() {
-						self.overlay.className = '';
+						self.overlay.className = 'overlay';
 					}, 15000);
 
 					// ATTEMPT TO GET USER'S LOCATION FROM BROWSER
@@ -665,7 +665,7 @@
 						geocoder.geocode({'location':location }, function(results, status) {
 							if (status == google.maps.GeocoderStatus.OK) {
 								clearTimeout(timeout);
-								self.overlay.className = '';
+								self.overlay.className = 'overlay';
 								var place = results[0]; place.name = place.address_components[0].long_name;
 								self.searchInputElement.value = place.formatted_address;
 								shareLocationButtonElement.className = shareLocationButtonElement.className + ' active'
@@ -674,7 +674,7 @@
 						});
 					}, function() {
 						// Failure
-						self.overlay.className = '';
+						self.overlay.className = 'overlay';
 					});
 
 				});

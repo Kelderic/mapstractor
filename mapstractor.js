@@ -53,7 +53,6 @@
 				/*            map.                                 */
 				self.polygons = [];
 
-
 				/* Variable:  eventIsArtificial                    */
 				/* Type:      Boolean                              */
 				/* Default:   false                                */
@@ -334,6 +333,20 @@
 					self.gMap.addListener('bounds_changed', function() {
 						gSearchBox.setBounds(self.gMap.getBounds());
 					});
+
+					// STORE THE AUTOCOMPLETE HTML WRAPPER ELEMENT AS A GLOBAL SO
+					// THAT OTHER FUNCTIONS CAN ACCESS IT.
+
+					setTimeout(function() {
+
+						self.autoCompleteList = document.querySelector('.pac-container');
+
+						// IF THE AUTOCOMPLETE LIST IS NOT SPECIFIED TO BE SHOWN, HIDE IT
+
+						self.autoCompleteList.style['opacity'] = 0;
+						self.autoCompleteList.style['pointer-events'] = 'none';
+
+					}, 500);
 
 				}
 
@@ -786,16 +799,9 @@
 
 				var geocoder = new google.maps.Geocoder();
 
-				// GRAB THE DOM ELEMENT CONTAINING THE CURRENT AUTOCOMPLETE LIST
+				// GET THE TEXT CONTENT TO USE TO SEARCH FOR.
 
-				var autoCompleteList = document.querySelectorAll('.pac-container');
-
-
-				// GRAB THE FIRST ELEMENT FROM THE AUTOCOMPLETE LIST, AND GET THE TEXT
-				// CONTENT TO USE TO SEARCH FOR.
-				
-				var firstResult = document.querySelectorAll('.pac-item:first-child');
-				var searchText = firstResult[0].textContent;
+				var searchText = self.autoCompleteList.firstElementChild.textContent;
 
 				// USE THE GOOGLE GEOCODER TO SEARCH FOR THE TEXT RETRIEVED ABOVE, AND FROM IT
 				// GET A GOOGLE PLACE CONSTRUCT. RUN THE CALLBACK FUNCTION ON THAT PLACE.

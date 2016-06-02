@@ -163,9 +163,9 @@
 }
 .overlay.loading div {
 	-webkit-animation: pulsate 1s ease-out;
-					animation: pulsate 1s ease-out;
+			animation: pulsate 1s ease-out;
 	-webkit-animation-iteration-count: infinite;
-					animation-iteration-count: infinite;
+			animation-iteration-count: infinite;
 }
 
 @-webkit-keyframes pulsate {

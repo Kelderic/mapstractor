@@ -256,10 +256,15 @@
 				/*            place successfully.                  */
 				var searchCallback = 'searchCallback' in params ? params.searchCallback : function(){};
 
-				// CREATE THE HTML ELEMENTS
+				// CREATE THE HTML CONTROL WRAP
 
-				var searchInputElement = self._createHTML({tagName:'input', placeholder: 'Search for City, State, or Zip Code...', location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
-				var searchButtonElement = self._createHTML({tagName:'button', innerHTML: magnifyingGlassIcon, location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
+				var searchBoxWrapElement = self._createHTML({tagName:'div', id:'searchBox', className: 'control', styles: {'max-width':'100%', 'width':'400px'}, location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
+				
+				// CREATE THE HTML CONTROL ELEMENTS
+
+				var searchSettingsButtonElement = self._createHTML({tagName:'button', location: searchBoxWrapElement, innerHTML: settingsIcon});
+				var searchInputElement = self._createHTML({tagName:'input',  location: searchBoxWrapElement, styles: {'width':'calc(100% - 100px)'}, placeholder: 'Search for City, State, or Zip Code...'});
+				var searchButtonElement = self._createHTML({tagName:'button', location: searchBoxWrapElement, innerHTML: magnifyingGlassIcon});
 
 				// STORE THE SEARCH INPUT AS A GOLBAL SO THAT OTHER FUNCTIONS CAN ACCESS IT
 
@@ -304,9 +309,13 @@
 				/*            place successfully.                  */
 				var callback = 'callback' in params ? params.callback : function(){};
 
-				// CREATE THE HTML ELEMENTS
+				// CREATE THE HTML CONTROL WRAP
 
-				var shareLocationButtonElement = self._createHTML({tagName:'button', innerHTML: locationIcon, location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
+				var shareLocationWrapElement = self._createHTML({tagName:'div', id:'sharelocation', className: 'control', location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
+
+				// CREATE THE HTML CONTROL ELEMENTS
+
+				var shareLocationButtonElement = self._createHTML({tagName:'button', location: shareLocationWrapElement, innerHTML: locationIcon});
 
 				// SET UP THE ELEMENTS WITH THE GOOGLE JS API
 

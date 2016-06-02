@@ -1,40 +1,48 @@
-.controls {
-	padding:10px;
-	position:absolute;
-	max-width:100%;
-	width:400px;
-	box-sizing:border-box;
+.controls:not(:empty) {
+	margin:10px;
 }
 
-.controls input,
-.controls button {
-	background-color:white;
-	font-family:inherit;
-	font-size: 15px;
+.control {
 	border-radius:2px;
-	box-sizing:border-box;
-	height:50px;
-	outline:none;
-	box-shadow:0 2px 6px rgba(0, 0, 0, 0.3);
+	overflow:hidden;
+	box-shadow: 0 2px 6px rgba(0,0,0,.3);
 	margin-left:10px;
-	border:solid 1px white;
-	display:block;
+	float:left;
 }
 
-.controls input:first-child,
-.controls button:first-child {
+.control:first-child {
 	margin-left:0;
 }
 
-.controls input:focus,
-.controls input:hover,
-.controls button:focus,
-.controls button:hover {
+.controls::after,
+.control::after {
+	display:block;
+	content:"";
+	clear:both;
+}
+
+.control input,
+.control button {
+	border:none;
+	box-shadow:none;
+	background-color:white;
+	font-family:inherit;
+	font-size: 15px;
+	box-sizing:border-box;
+	height:50px;
+	outline:none;
+	display:block;
+	border:solid 1px white;
+}
+
+.control input:focus,
+.control input:hover,
+.control button:focus,
+.control button:hover {
 	border-color: rgb(77, 144, 254);
 }
 
-.controls input {
-	width:calc(100% - 60px);
+.control input {
 	padding:0 20px;
 	font-family:Roboto;
 	font-size:15px;
@@ -42,33 +50,33 @@
 	text-overflow:ellipsis;
 }
 
-.controls button {
+.control button {
 	width:50px;
 	padding:15px;
 	cursor:pointer;
 }
 
-.controls button::-moz-focus-inner {
+.control button::-moz-focus-inner {
 	padding: 0;
 	border: 0;
 }
 
-.controls button svg {
+.control svg {
 	height:20px;
 	width:20px;
 }
 
-.controls button svg path {
+.control svg path {
 	fill:gray;
 }
 
-.controls button:focus,
-.controls button:hover {
+.control button:focus,
+.control button:hover {
 	background-color:rgb(77, 144, 254);
 }
 
-.controls button:focus svg path,
-.controls button:hover svg path {
+.control button:focus svg path,
+.control button:hover svg path {
 	fill:white;
 }
 

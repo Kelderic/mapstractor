@@ -302,7 +302,7 @@
 
 					// CREATE OFFICIAL GOOGLE API AUTOCOMPLETE CONSTRUCT WITH SEARCH INPUT
 
-					var gSearchBox = new google.maps.places.Autocomplete(searchInputElement, options);
+					var gSearchBox = new google.maps.places.Autocomplete(searchInputElement, searchOptions);
 
 					// TRIGGER ACTION WHEN A SEARCH IS BEGUN VIA THE place_changed EVENT (CLICKING
 					// AN OPTION FROM THE AUTOCOMPLETE SUGGESTIONS)IS CLICKED

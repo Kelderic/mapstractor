@@ -742,7 +742,7 @@
 
 			},
 
-			_getPlaceFromAutocompleteSuggestions: function(callback) {
+			_getPlaceFromAutocompleteSuggestions: function(placefoundCallback) {
 
 				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 
@@ -750,13 +750,13 @@
 
 				// SETUP VARIABLES FROM PROVIDED PARAMETERS
 
-				/* Variable:  callback                             */
+				/* Variable:  placefoundCallback                   */
 				/* Type:      function                             */
 				/* Default:   N/A                                  */
 				/* Purpose:   This function is the callback which  */
 				/*            is called when the search finds a    */
 				/*            place successfully.                  */
-				callback = callback;			
+				placefoundCallback = placefoundCallback;			
 
 				// CREATE A GEOCODER USING GOOGLE JS API
 
@@ -773,7 +773,7 @@
 					if (status == google.maps.GeocoderStatus.OK) {
 						var place = results[0]; place.name = place.address_components[0].long_name;
 						self.searchInputElement.value = place.formatted_address;
-						callback(place);
+						placefoundCallback(place);
 					} else {
 						console.log('Geocoding the Place from the autoComplete list failed. The status code is: ' + status);
 					}

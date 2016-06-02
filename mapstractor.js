@@ -224,25 +224,13 @@
 
 				/* Variable:  options                              */
 				/* Type:      Object                               */
-				/* Default:   N/A                                  */
+				/* Default:   {}                                   */
 				/* Purpose:   This object holds options for the    */
 				/*            Google autoComplete functionality.   */
-				/*            Previously, only regions (cities,    */
-				/*            states, zip codes, etc) in the       */
-				/*            United States were allowed. Now, the */
-				/*            object is empty to allow for more    */
-				/*            flexiblity. The previous options are */
-				/*            left as comments, as examples for    */
-				/*            future extension.                    */
-				/*            @Todo:                               */
-				/*            Allow the this to be an option that  */
-				/*            the user can specify when calling    */
-				/*            Mapstractor.                         */
-				var options = {
-					//types: ['(regions)'],
-					//componentRestrictions: {country: 'us'}
-				};
-
+				/*            Options include:                     */
+				/*            types:['(regions)']                  */
+				/*            componentRestrictions:{country:'us'} */
+				var options = 'options' in params ? params.options : {};
 
 				/* Variable:  showSearchButton                     */
 				/* Type:      Boolean                              */

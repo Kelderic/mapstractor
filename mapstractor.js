@@ -343,8 +343,12 @@
 
 						// IF THE AUTOCOMPLETE LIST IS NOT SPECIFIED TO BE SHOWN, HIDE IT
 
-						self.autoCompleteList.style['opacity'] = 0;
-						self.autoCompleteList.style['pointer-events'] = 'none';
+						if ( ! showAutocompleteList ) {
+
+							self.autoCompleteList.style['opacity'] = 0;
+							self.autoCompleteList.style['pointer-events'] = 'none';
+
+						}
 
 					}, 500);
 

@@ -10,6 +10,7 @@
 	box-shadow: 0 2px 6px rgba(0,0,0,.3);
 	margin-left:10px;
 	float:left;
+	background-color:white;
 }
 
 .control:first-child {
@@ -24,8 +25,8 @@
 }
 
 .control input,
-.control button {
-	border:none;
+.control button,
+.control select {
 	box-shadow:none;
 	background-color:white;
 	font-family:inherit;
@@ -35,13 +36,6 @@
 	outline:none;
 	display:block;
 	border:solid 1px white;
-}
-
-.control input:focus,
-.control input:hover,
-.control button:focus,
-.control button:hover {
-	border-color: rgb(77, 144, 254);
 }
 
 .control input {
@@ -63,13 +57,18 @@
 	border: 0;
 }
 
-.control svg {
-	height:20px;
-	width:20px;
+.control select {
+	border:1px solid rgb(220, 220, 220);
+	width:100%;
 }
 
-.control svg path {
-	fill:gray;
+.control input:focus,
+.control input:hover,
+.control button:focus,
+.control button:hover,
+.control select:focus,
+.control select:hover {
+	border-color: rgb(77, 144, 254);
 }
 
 .control button:focus,
@@ -80,6 +79,19 @@
 .control button:focus svg path,
 .control button:hover svg path {
 	fill:white;
+}
+
+.control svg {
+	height:20px;
+	width:20px;
+}
+
+.control svg path {
+	fill:gray;
+}
+
+.control label {
+	box-sizing:border-box;
 }
 
 .controls.left input, 

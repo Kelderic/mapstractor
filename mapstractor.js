@@ -35,7 +35,7 @@
 				/* Purpose:   This is the main map object/element. */
 				/*            An HTML element is created and then  */
 				/*            converted into a Google Maps object. */
-				self.gMap = new google.maps.Map(self._createHTML({styles: {height:'100%'}}), self.opts.map);
+				self.gMap = new google.maps.Map(self.createHTML({styles: {height:'100%'}}), self.opts.map);
 
 				/* Variable:  markers                              */
 				/* Type:      Array                                */
@@ -275,7 +275,7 @@
 
 				// CREATE THE HTML CONTROL WRAP
 
-				var searchBoxWrapElement = self._createHTML({tagName:'div', id:'searchBox', className: 'control', styles: {'display':'flex', 'max-width':'100%', 'width':'400px'}, location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
+				var searchBoxWrapElement = self.createHTML({tagName:'div', id:'searchBox', className: 'control', styles: {'display':'flex', 'max-width':'100%', 'width':'400px'}, location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
 
 				// IF SEARCH SETTINGS BUTTON IS BEING ADDED
 
@@ -283,7 +283,7 @@
 
 					// CREATE HTML ELEMENT FOR THE BUTTON
 
-					var searchSettingsButtonElement = self._createHTML({tagName:'button', location: searchBoxWrapElement, innerHTML: settingsIcon});
+					var searchSettingsButtonElement = self.createHTML({tagName:'button', location: searchBoxWrapElement, innerHTML: settingsIcon});
 
 					// ASSIGN IT'S CLICK CALLBACK, WHICH IS USER SPECIFIED
 
@@ -298,7 +298,7 @@
 
 					// CREATE HTML ELEMENT FOR SEARCH INPUT
 
-					var searchInputElement = self._createHTML({tagName:'input',  location: searchBoxWrapElement, styles: {'flex':'1'}, placeholder: 'Search for City, State, or Zip Code...'});
+					var searchInputElement = self.createHTML({tagName:'input',  location: searchBoxWrapElement, styles: {'flex':'1'}, placeholder: 'Search for City, State, or Zip Code...'});
 
 					// CREATE OFFICIAL GOOGLE API AUTOCOMPLETE CONSTRUCT WITH SEARCH INPUT
 
@@ -348,7 +348,7 @@
 
 					// CREATE HTML ELEMENT FOR BUTTON
 
-					var searchButtonElement = self._createHTML({tagName:'button', location: searchBoxWrapElement, innerHTML: magnifyingGlassIcon});
+					var searchButtonElement = self.createHTML({tagName:'button', location: searchBoxWrapElement, innerHTML: magnifyingGlassIcon});
 
 					// ADD EVENT LISTENER WHEN THE SEARCH BUTTON IS CLICKED ON, TO TRIGGER
 					// GETTING THE PLACE FROM THE AUTOCOMPLETE LIST MANUALLY AND THEN SEARCHING
@@ -413,11 +413,11 @@
 
 				// CREATE THE HTML CONTROL WRAP
 
-				var shareLocationWrapElement = self._createHTML({tagName:'div', id:'sharelocation', className: 'control', location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
+				var shareLocationWrapElement = self.createHTML({tagName:'div', id:'sharelocation', className: 'control', location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
 
 				// CREATE THE HTML CONTROL ELEMENTS
 
-				var shareLocationButtonElement = self._createHTML({tagName:'button', location: shareLocationWrapElement, innerHTML: locationIcon});
+				var shareLocationButtonElement = self.createHTML({tagName:'button', location: shareLocationWrapElement, innerHTML: locationIcon});
 
 				// TRIGGER ACTION WHEN THE SHARE LOCATION BUTTON IS CLICKED
 
@@ -602,50 +602,7 @@
 
 			},
 
-			/***************************************/
-			/********** PRIVATE FUNCTIONS **********/
-			/***************************************/
-
-			_createUIWrappers: function() {
-
-				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-				var self = this;
-
-				// SET UP OBJECT WITH ALL DESIRED WRAPPER LOCATIONS
-
-				var wrappers = [
-					{position: 'TOP_LEFT', class: 'controls left'},
-					{position: 'LEFT_TOP', class: 'controls left'},
-					{position: 'BOTTOM_LEFT', class: 'controls left'},
-					{position: 'LEFT_BOTTOM', class: 'controls left'},
-					{position: 'TOP_RIGHT', class: 'controls right'},
-					{position: 'RIGHT_TOP', class: 'controls right'},
-					{position: 'BOTTOM_RIGHT', class: 'controls right'},
-					{position: 'RIGHT_BOTTOM', class: 'controls right'},
-				]
-
-				// LOOP THROUGH WRAPPER OBJECT AND CREATE WRAPPER ELEMENTS
-
-				for ( var i=0, l=wrappers.length; i<l; i++ ) {
-					self.gMap.controls[google.maps.ControlPosition[wrappers[i].position]].push(self._createHTML({className: wrappers[i].class}));
-				}
-
-			},
-
-			_createOverlay: function() {
-
-				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-				var self = this;
-
-				// CREATE THE WRAPPER ELEMENT AND PLACE IT ON THE MAP, THEN STORE IT IN A GLOBAL
-
-				self.overlay = self._createHTML({className:'overlay loading', innerHTML:'<svg></svg><div></div><span>Starting up...</span>', });
-
-			},
-
-			_createHTML: function(params) {
+			createHTML: function(params) {
 
 				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 
@@ -739,6 +696,49 @@
 				// RETURN THE MARKER TO THE FUNCTION THAT REQUESTED IT
 
 				return element;
+
+			},
+
+			/***************************************/
+			/********** PRIVATE FUNCTIONS **********/
+			/***************************************/
+
+			_createUIWrappers: function() {
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
+				var self = this;
+
+				// SET UP OBJECT WITH ALL DESIRED WRAPPER LOCATIONS
+
+				var wrappers = [
+					{position: 'TOP_LEFT', class: 'controls left'},
+					{position: 'LEFT_TOP', class: 'controls left'},
+					{position: 'BOTTOM_LEFT', class: 'controls left'},
+					{position: 'LEFT_BOTTOM', class: 'controls left'},
+					{position: 'TOP_RIGHT', class: 'controls right'},
+					{position: 'RIGHT_TOP', class: 'controls right'},
+					{position: 'BOTTOM_RIGHT', class: 'controls right'},
+					{position: 'RIGHT_BOTTOM', class: 'controls right'},
+				]
+
+				// LOOP THROUGH WRAPPER OBJECT AND CREATE WRAPPER ELEMENTS
+
+				for ( var i=0, l=wrappers.length; i<l; i++ ) {
+					self.gMap.controls[google.maps.ControlPosition[wrappers[i].position]].push(self.createHTML({className: wrappers[i].class}));
+				}
+
+			},
+
+			_createOverlay: function() {
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
+				var self = this;
+
+				// CREATE THE WRAPPER ELEMENT AND PLACE IT ON THE MAP, THEN STORE IT IN A GLOBAL
+
+				self.overlay = self.createHTML({className:'overlay loading', innerHTML:'<svg></svg><div></div><span>Starting up...</span>', });
 
 			},
 

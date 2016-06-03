@@ -699,6 +699,31 @@
 
 			},
 
+			getControlWrap: function(params) {
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
+				var self = this;
+
+				// SETUP VARIABLES FROM PROVIDED PARAMETERS
+
+				/* Variable:  location                             */
+				/* Type:      String                               */
+				/* Default:   'TOP_LEFT'                           */
+				/* Purpose:   This is the tagName of the element   */
+				/*            that is being created.               */
+				var location = 'location' in params ? params.location : 'TOP_LEFT';
+
+				// FIND THE SPECIFIED CONTROL WRAPPER ELEMENT BASED ON PROVIDED LOCATION
+
+				var element = self.gMap.controls[google.maps.ControlPosition[location]].j[0]
+
+				// RETURN THE CONTROL WRAPPER ELEMENT
+
+				return element;
+
+			},
+
 			/***************************************/
 			/********** PRIVATE FUNCTIONS **********/
 			/***************************************/

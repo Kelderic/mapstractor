@@ -275,7 +275,17 @@
 
 				// CREATE THE HTML CONTROL WRAP
 
-				var searchBoxWrapElement = self.createHTML({tagName:'div', id:'searchBox', className: 'control', styles: {'display':'flex', 'max-width':'100%', 'width':'400px'}, location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
+				var searchBoxWrapElement = self.createHTML({
+					tagName: 'div',
+					id: 'searchBox',
+					className: 'control',
+					styles: {
+						'display':' flex',
+						'max-width': '100%',
+						'width': '400px'
+					},
+					location:self.getControlWrap({location:location})
+				});
 
 				// IF SEARCH SETTINGS BUTTON IS BEING ADDED
 
@@ -283,7 +293,11 @@
 
 					// CREATE HTML ELEMENT FOR THE BUTTON
 
-					var searchSettingsButtonElement = self.createHTML({tagName:'button', location: searchBoxWrapElement, innerHTML: settingsIcon});
+					var searchSettingsButtonElement = self.createHTML({
+						tagName:'button',
+						location: searchBoxWrapElement,
+						innerHTML: settingsIcon
+					});
 
 					// ASSIGN IT'S CLICK CALLBACK, WHICH IS USER SPECIFIED
 
@@ -298,7 +312,14 @@
 
 					// CREATE HTML ELEMENT FOR SEARCH INPUT
 
-					var searchInputElement = self.createHTML({tagName:'input',  location: searchBoxWrapElement, styles: {'flex':'1'}, placeholder: 'Search for City, State, or Zip Code...'});
+					var searchInputElement = self.createHTML({
+						tagName:'input',
+						location: searchBoxWrapElement,
+						styles: {
+							'flex':'1'
+						},
+						placeholder: 'Search for City, State, or Zip Code...'
+					});
 
 					// CREATE OFFICIAL GOOGLE API AUTOCOMPLETE CONSTRUCT WITH SEARCH INPUT
 
@@ -348,7 +369,11 @@
 
 					// CREATE HTML ELEMENT FOR BUTTON
 
-					var searchButtonElement = self.createHTML({tagName:'button', location: searchBoxWrapElement, innerHTML: magnifyingGlassIcon});
+					var searchButtonElement = self.createHTML({
+						tagName:'button',
+						location: searchBoxWrapElement,
+						innerHTML: magnifyingGlassIcon
+					});
 
 					// ADD EVENT LISTENER WHEN THE SEARCH BUTTON IS CLICKED ON, TO TRIGGER
 					// GETTING THE PLACE FROM THE AUTOCOMPLETE LIST MANUALLY AND THEN SEARCHING
@@ -413,11 +438,20 @@
 
 				// CREATE THE HTML CONTROL WRAP
 
-				var shareLocationWrapElement = self.createHTML({tagName:'div', id:'sharelocation', className: 'control', location: self.gMap.controls[google.maps.ControlPosition[location]].j[0]});
+				var shareLocationWrapElement = self.createHTML({
+					tagName: 'div',
+					id: 'sharelocation',
+					className: 'control',
+					location: self.getControlWrap({location:location})
+				});
 
 				// CREATE THE HTML CONTROL ELEMENTS
 
-				var shareLocationButtonElement = self.createHTML({tagName:'button', location: shareLocationWrapElement, innerHTML: locationIcon});
+				var shareLocationButtonElement = self.createHTML({
+					tagName: 'button',
+					location: shareLocationWrapElement,
+					innerHTML: locationIcon
+				});
 
 				// TRIGGER ACTION WHEN THE SHARE LOCATION BUTTON IS CLICKED
 
@@ -750,7 +784,9 @@
 				// LOOP THROUGH WRAPPER OBJECT AND CREATE WRAPPER ELEMENTS
 
 				for ( var i=0, l=wrappers.length; i<l; i++ ) {
-					self.gMap.controls[google.maps.ControlPosition[wrappers[i].position]].push(self.createHTML({className: wrappers[i].class}));
+					self.gMap.controls[google.maps.ControlPosition[wrappers[i].position]].push(self.createHTML({
+						className: wrappers[i].class
+					}));
 				}
 
 			},
@@ -763,7 +799,10 @@
 
 				// CREATE THE WRAPPER ELEMENT AND PLACE IT ON THE MAP, THEN STORE IT IN A GLOBAL
 
-				self.overlay = self.createHTML({className:'overlay loading', innerHTML:'<svg></svg><div></div><span>Starting up...</span>', });
+				self.overlay = self.createHTML({
+					className: 'overlay loading',
+					innerHTML: '<svg></svg><div></div><span>Starting up...</span>'
+				});
 
 			},
 

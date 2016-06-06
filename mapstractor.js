@@ -522,8 +522,7 @@
 				// ADD NEW MARKER
 
 				self.addMarker({
-					place: place,
-					markerURL: self.markerURL
+					place: place
 				});
 
 				// MOVE THE VIEWPORT OF THE MAP TO THE NEW MARKER
@@ -598,11 +597,12 @@
 
 				/* Variable:  markerURL                            */
 				/* Type:      String                               */
-				/* Default:   ''                                   */
-				/* Purpose:   This is the URL of the custom image  */
-				/*            that is being used as the default    */
-				/*            marker.                              */
-				var markerURL = 'markerURL' in params ? params.markerURL : '';
+				/* Default:   self.markerURL                       */
+				/* Purpose:   This is a URL, pointing to an image, */
+				/*            which will become the default marker */
+				/*            icon unless overridden when creating */
+				/*            a marker.                            */
+				var markerURL = 'markerURL' in params ? params.markerURL : self.markerURL;
 
 				/* Variable:  clickCallback                        */
 				/* Type:      String                               */

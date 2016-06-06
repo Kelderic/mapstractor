@@ -64,6 +64,7 @@
 				/* Purpose:   This object is the primary Google    */
 				/*            Map object.                          */
 				self.gMap = new google.maps.Map(self.createHTML({styles: {height:'100%'}}), params.mapOptions);
+				self.gMap.mapstractor = self;
 
 				/* Variable:  markerURL                            */
 				/* Type:      String                               */
@@ -82,6 +83,13 @@
 				/*            markers which are currently on the   */
 				/*            map.                                 */
 				self.markers = [];
+
+				/* Variable:  infoboxes                            */
+				/* Type:      Array                                */
+				/* Purpose:   This is an array which holds all     */
+				/*            infoboxes which are currently on the */
+				/*            map.                                 */
+				self.infoboxes = [];
 
 				/* Variable:  polygons                             */
 				/* Type:      Array                                */
@@ -663,6 +671,28 @@
 
 			},
 
+			clearInfoboxes: function() {
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
+				var self = this;
+
+				// REMOVE ALL INFOBOXES FROM THE MAP
+
+				if ( self.infoboxes.length > 0 ) {
+
+					self.infoboxes.forEach(function(infobox) {
+						infobox.close();
+					});
+
+					// DELETE INFOBOXES FROM INFOBOX RECORDS ARRAY
+
+					self.infobox = [];
+
+				}
+
+			},
+
 			createHTML: function(params) {
 
 				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
@@ -930,12 +960,31 @@
 	}
 
 	google.maps.Marker.prototype.showInfobox = function(){
-		if ( this.infobox ) {
+
+		// STORE this AS marker, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
+		var marker = this;
+
+		// GET TYPICAL self FROM marker
+
+		var self = marker.map.mapstractor;
+
+		// CHECK TO SEE IF THE MARKER HAS INFOBOX CONTENT
+
+		if ( marker.infobox ) {
+
+			// CREATE NEW INFOBOX, OPEN IT ON THE MAP, AND ADD IT TO GLOBAL TRACKING ARRAY
+
 			var infoWindow = new google.maps.InfoWindow({
-				content: this.infobox,
+				content: marker.infobox,
 			});
-			infoWindow.open(self.gMap, this);
+
+			infoWindow.open(self.gMap, marker);
+
+			self.infoboxes.push(infoWindow);
+
 		}
+
 	}
 
 }(window, google));

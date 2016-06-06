@@ -609,7 +609,7 @@
 
 				/* Variable:  place                                */
 				/* Type:      Custom Google Maps Place Object      */
-				/* Default:   ''                                   */
+				/* Default:   {}                                   */
 				/* Purpose:   This is a Google Maps place object   */
 				/*            that will be used to create a marker */
 				/*            as it's location.                    */

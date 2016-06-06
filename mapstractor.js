@@ -37,6 +37,15 @@
 				/*            converted into a Google Maps object. */
 				self.gMap = new google.maps.Map(self.createHTML({styles: {height:'100%'}}), self.opts.map);
 
+				/* Variable:  markerURL                            */
+				/* Type:      String                               */
+				/* Default:   ''                                   */
+				/* Purpose:   This is a URL, pointing to an image, */
+				/*            which will be the default marker     */
+				/*            icon unless overridden when creating */
+				/*            a marker.                            */
+				self.markerURL = 'markerURL' in self.opts ? self.opts.markerURL : '';
+
 				/* Variable:  markers                              */
 				/* Type:      Array                                */
 				/* Default:   []                                   */
@@ -514,7 +523,7 @@
 
 				self.addMarker({
 					place: place,
-					markerURL: self.opts.markerURL
+					markerURL: self.markerURL
 				});
 
 				// MOVE THE VIEWPORT OF THE MAP TO THE NEW MARKER

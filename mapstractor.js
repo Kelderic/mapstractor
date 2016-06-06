@@ -653,21 +653,6 @@
 
 				self.markers.push(marker);
 
-				// IF THE PLACE HAS AN INFOBOX, CREATE THAT INFOBOX AND OPEN IT ON THE MAP
-
-				if ( place.infobox != false ) {
-					if (place.content) {
-						var infoWindow = new google.maps.InfoWindow({
-							content: place.content,
-						});
-					} else {
-						var infoWindow = new google.maps.InfoWindow({
-							content: place.formatted_address
-						});
-					}
-					infoWindow.open(self.gMap, marker);
-				}
-
 				// ADD EVENT LISTENERS TO MARKER
 
 				marker.addListener('click', clickCallback);
@@ -942,6 +927,15 @@
 		var bounds = new google.maps.LatLngBounds()
 		this.getPath().forEach(function(element,index){bounds.extend(element)})
 		return bounds.getCenter();
+	}
+
+	google.maps.Marker.prototype.showInfobox = function(){
+		if ( this.infobox ) {
+			var infoWindow = new google.maps.InfoWindow({
+				content: this.infobox,
+			});
+			infoWindow.open(self.gMap, this);
+		}
 	}
 
 }(window, google));

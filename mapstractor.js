@@ -29,14 +29,14 @@
 					throw new Error('We\'ve got a problem. Mapstractor requires a hardcoded element on the page to place the Google map inside. This element needs to have an ID which is passed to Mapstractor.');
 				}
 
-				/* Variable:  map                                  */
+				/* Variable:  mapOptions                           */
 				/* Type:      Object                               */
 				/* Default:   N/A (Required)                       */
 				/* Purpose:   This object holds the parameters for */
 				/*            the Google Map. It is required, so   */
 				/*            there is no default.                 */
-				params.map = 'map' in params ? params.map : null;
-				if ( params.map == null ) {
+				params.mapOptions = 'mapOptions' in params ? params.mapOptions : null;
+				if ( params.mapOptions == null ) {
 					throw new Error('We\'ve got a problem. The Google Maps JS API requires control parameters to create the map. Things like map zoom, map center, etc. An object containing these needs to be given to Mapstractor.');
 				}
 
@@ -66,7 +66,7 @@
 				/* Purpose:   This object holds the parameters for */
 				/*            the Google Map. It is required, so   */
 				/*            there is no default.                 */
-				self.gMap = new google.maps.Map(self.createHTML({styles: {height:'100%'}}), params.map);
+				self.gMap = new google.maps.Map(self.createHTML({styles: {height:'100%'}}), params.mapOptions);
 
 				/* Variable:  markerURL                            */
 				/* Type:      String                               */

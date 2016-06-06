@@ -16,7 +16,31 @@
 
 				var self = this;
 
-				// SETUP GLOBAL VARIABLES FROM USER PARAMETERS
+				// VERIFY REQUIRED PARAMETERS
+
+				/* Variable:  mapID                                */
+				/* Type:      String                               */
+				/* Default:   N/A (Required)                       */
+				/* Purpose:   This string is the ID of the HTML    */
+				/*            element which is hardcoded on the    */
+				/*            page and will become the wrapper.    */
+				params.mapWrapID = 'mapWrapID' in params ? params.mapWrapID : null;
+				if ( params.mapWrapID == null ) {
+					throw new Error('We\'ve got a problem. Mapstractor requires a hardcoded element on the page to place the Google map inside. This element needs to have an ID which is passed to Mapstractor.');
+				}
+
+				/* Variable:  map                                  */
+				/* Type:      Object                               */
+				/* Default:   N/A (Required)                       */
+				/* Purpose:   This object holds the parameters for */
+				/*            the Google Map. It is required, so   */
+				/*            there is no default.                 */
+				params.map = 'map' in params ? params.map : null;
+				if ( params.map == null ) {
+					throw new Error('We\'ve got a problem. The Google Maps JS API requires control parameters to create the map. Things like map zoom, map center, etc. An object containing these needs to be given to Mapstractor.');
+				}
+
+				// CHECK TO SEE IF THE MAP WRAPPER REALLY EXISTS
 
 				/* Variable:  mapWrap                              */
 				/* Type:      HTML Element                         */
@@ -30,16 +54,18 @@
 				if ( self.mapWrap == null ) {
 					throw new Error('We\'ve got a problem. Mapstractor was told that the ID of the wrapper element is ' + params.mapWrapID + '. There is no element on the page with that ID.');
 				}
-				
+
 				// Ensure that this wrapper element is relatively positioned.
 				self.mapWrap.style.position = 'relative';
 
+				// NOW THAT EVERYTHING REQUIRED HAS BEEN VERIFIED, SET UP GOOGLE MAP
+
 				/* Variable:  gMap                                 */
 				/* Type:      Google Map Object                    */
-				/* Default:   N/A                                  */
-				/* Purpose:   This is the main map object/element. */
-				/*            An HTML element is created and then  */
-				/*            converted into a Google Maps object. */
+				/* Default:   N/A (Required)                       */
+				/* Purpose:   This object holds the parameters for */
+				/*            the Google Map. It is required, so   */
+				/*            there is no default.                 */
 				self.gMap = new google.maps.Map(self.createHTML({styles: {height:'100%'}}), params.map);
 
 				/* Variable:  markerURL                            */

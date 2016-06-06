@@ -44,7 +44,6 @@
 
 				/* Variable:  mapWrap                              */
 				/* Type:      HTML Element                         */
-				/* Default:   N/A (Required)                       */
 				/* Purpose:   This is an element that is hardcoded */
 				/*            on the page, which Mapstractor will  */
 				/*            use as an outer wrapper for the map  */
@@ -62,10 +61,8 @@
 
 				/* Variable:  gMap                                 */
 				/* Type:      Google Map Object                    */
-				/* Default:   N/A (Required)                       */
-				/* Purpose:   This object holds the parameters for */
-				/*            the Google Map. It is required, so   */
-				/*            there is no default.                 */
+				/* Purpose:   This object is the primary Google    */
+				/*            Map object.                          */
 				self.gMap = new google.maps.Map(self.createHTML({styles: {height:'100%'}}), params.mapOptions);
 
 				/* Variable:  markerURL                            */
@@ -81,7 +78,6 @@
 
 				/* Variable:  markers                              */
 				/* Type:      Array                                */
-				/* Default:   []                                   */
 				/* Purpose:   This is an array which holds all     */
 				/*            markers which are currently on the   */
 				/*            map.                                 */
@@ -89,7 +85,6 @@
 
 				/* Variable:  polygons                             */
 				/* Type:      Array                                */
-				/* Default:   []                                   */
 				/* Purpose:   This is an array which holds all     */
 				/*            polygons which are currently on the  */
 				/*            map.                                 */

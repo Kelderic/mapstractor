@@ -17,7 +17,7 @@
 
 				var self = this;
 
-				// SETUP GLOBAL VARIABLES
+				// SETUP GLOBAL VARIABLES FROM USER PARAMETERS
 
 				/* Variable:  mapWrap                              */
 				/* Type:      HTML Element                         */
@@ -45,6 +45,8 @@
 				/*            icon unless overridden when creating */
 				/*            a marker.                            */
 				self.markerURL = 'markerURL' in self.opts ? self.opts.markerURL : '';
+
+				// SET UP GLOBAL ARRAYS TO HOLD CURRENT DATA ON THE MAP
 
 				/* Variable:  markers                              */
 				/* Type:      Array                                */

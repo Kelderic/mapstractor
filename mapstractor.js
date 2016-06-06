@@ -1,9 +1,8 @@
 (function(window, google) {
 
 	window.Mapstractor = (function() {
-		function Mapstractor(opts) {
-			this.opts = opts;
-			this.init();
+		function Mapstractor(params) {
+			this.init(params);
 		}
 		Mapstractor.prototype = {
 
@@ -11,7 +10,7 @@
 			/************* INITIALIZE **************/
 			/***************************************/
 
-			init: function() {
+			init: function(params) {
 
 				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 
@@ -25,7 +24,7 @@
 				/* Purpose:   This is an element that is hardcoded */
 				/*            on the page, which Mapstractor will  */
 				/*            use as an outer wrapper for the map  */
-				self.mapWrap = document.getElementById(self.opts.mapWrapID);
+				self.mapWrap = document.getElementById(params.mapWrapID);
 				// Ensure that this wrapper element is relatively positioned.
 				self.mapWrap.style.position = 'relative';
 
@@ -35,7 +34,7 @@
 				/* Purpose:   This is the main map object/element. */
 				/*            An HTML element is created and then  */
 				/*            converted into a Google Maps object. */
-				self.gMap = new google.maps.Map(self.createHTML({styles: {height:'100%'}}), self.opts.map);
+				self.gMap = new google.maps.Map(self.createHTML({styles: {height:'100%'}}), params.map);
 
 				/* Variable:  markerURL                            */
 				/* Type:      String                               */
@@ -44,7 +43,7 @@
 				/*            which will be the default marker     */
 				/*            icon unless overridden when creating */
 				/*            a marker.                            */
-				self.markerURL = 'markerURL' in self.opts ? self.opts.markerURL : '';
+				self.markerURL = 'markerURL' in params ? params.markerURL : '';
 
 				// SET UP GLOBAL ARRAYS TO HOLD CURRENT DATA ON THE MAP
 

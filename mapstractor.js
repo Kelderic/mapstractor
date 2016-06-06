@@ -615,6 +615,15 @@
 				/*            as it's location.                    */
 				var place = 'place' in params ? params.place : '';
 
+				/* Variable:  infobox                              */
+				/* Type:      String                               */
+				/* Default:   ''                                   */
+				/* Purpose:   This is the content of the infobox   */
+				/*            related to this marker. If it is not */
+				/*            provided, check for a formatted      */
+				/*            in the place. If that exists, use it */
+				var infobox = 'infobox' in params ? params.infobox : 'formatted_address' in params.place ? params.place.formatted_address : '';
+
 				/* Variable:  markerURL                            */
 				/* Type:      String                               */
 				/* Default:   self.markerURL                       */
@@ -635,6 +644,10 @@
 				// CREATE A GOOGLE MAPS MARKER OBJECT USING THE PROVIDED PLACE AND OPTIONAL MARKER URL INFO
 
 				var marker = self._createMarker(place, markerURL);
+
+				// ADD INFOBOX INFORMATION TO MARKER OBJECT
+
+				marker.infobox = infobox;
 
 				// ADD THE MARKER TO THE SET OF CURRENT MARKERS
 

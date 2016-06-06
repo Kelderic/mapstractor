@@ -151,6 +151,70 @@
 
 			},
 
+			addMarker: function(params) {
+
+				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
+				var self = this;
+
+				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
+
+				/* Variable:  place                                */
+				/* Type:      Custom Google Maps Place Object      */
+				/* Default:   {}                                   */
+				/* Purpose:   This is a Google Maps place object   */
+				/*            that will be used to create a marker */
+				/*            as it's location.                    */
+				var place = 'place' in params ? params.place : '';
+
+				/* Variable:  infobox                              */
+				/* Type:      String                               */
+				/* Default:   ''                                   */
+				/* Purpose:   This is the content of the infobox   */
+				/*            related to this marker. If it is not */
+				/*            provided, check for a formatted      */
+				/*            in the place. If that exists, use it */
+				var infobox = 'infobox' in params ? params.infobox : 'formatted_address' in params.place ? params.place.formatted_address : '';
+
+				/* Variable:  markerURL                            */
+				/* Type:      String                               */
+				/* Default:   self.markerURL                       */
+				/* Purpose:   This is a URL, pointing to an image, */
+				/*            which will become the default marker */
+				/*            icon unless overridden when creating */
+				/*            a marker.                            */
+				var markerURL = 'markerURL' in params ? params.markerURL : self.markerURL;
+
+				/* Variable:  clickCallback                        */
+				/* Type:      String                               */
+				/* Default:   function(){}                         */
+				/* Purpose:   This function is the callback which  */
+				/*            is called when the marker registers  */
+				/*            a click event.                       */
+				var clickCallback = 'clickCallback' in params ? params.clickCallback : function(){};
+
+				// CREATE A GOOGLE MAPS MARKER OBJECT USING THE PROVIDED PLACE AND OPTIONAL MARKER URL INFO
+
+				var marker = self._createMarker(place, markerURL);
+
+				// ADD INFOBOX INFORMATION TO MARKER OBJECT
+
+				marker.infobox = infobox;
+
+				// ADD THE MARKER TO THE SET OF CURRENT MARKERS
+
+				self.markers.push(marker);
+
+				// ADD EVENT LISTENERS TO MARKER
+
+				marker.addListener('click', clickCallback);
+
+				// RETURN THE MARKER TO THE FUNCTION THAT REQUESTED IT
+
+				return marker;
+
+			},
+
 			addPolygon: function(params) {
 
 				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
@@ -596,70 +660,6 @@
 					self.markers = [];
 
 				}
-
-			},
-
-			addMarker: function(params) {
-
-				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-				var self = this;
-
-				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
-
-				/* Variable:  place                                */
-				/* Type:      Custom Google Maps Place Object      */
-				/* Default:   {}                                   */
-				/* Purpose:   This is a Google Maps place object   */
-				/*            that will be used to create a marker */
-				/*            as it's location.                    */
-				var place = 'place' in params ? params.place : '';
-
-				/* Variable:  infobox                              */
-				/* Type:      String                               */
-				/* Default:   ''                                   */
-				/* Purpose:   This is the content of the infobox   */
-				/*            related to this marker. If it is not */
-				/*            provided, check for a formatted      */
-				/*            in the place. If that exists, use it */
-				var infobox = 'infobox' in params ? params.infobox : 'formatted_address' in params.place ? params.place.formatted_address : '';
-
-				/* Variable:  markerURL                            */
-				/* Type:      String                               */
-				/* Default:   self.markerURL                       */
-				/* Purpose:   This is a URL, pointing to an image, */
-				/*            which will become the default marker */
-				/*            icon unless overridden when creating */
-				/*            a marker.                            */
-				var markerURL = 'markerURL' in params ? params.markerURL : self.markerURL;
-
-				/* Variable:  clickCallback                        */
-				/* Type:      String                               */
-				/* Default:   function(){}                         */
-				/* Purpose:   This function is the callback which  */
-				/*            is called when the marker registers  */
-				/*            a click event.                       */
-				var clickCallback = 'clickCallback' in params ? params.clickCallback : function(){};
-
-				// CREATE A GOOGLE MAPS MARKER OBJECT USING THE PROVIDED PLACE AND OPTIONAL MARKER URL INFO
-
-				var marker = self._createMarker(place, markerURL);
-
-				// ADD INFOBOX INFORMATION TO MARKER OBJECT
-
-				marker.infobox = infobox;
-
-				// ADD THE MARKER TO THE SET OF CURRENT MARKERS
-
-				self.markers.push(marker);
-
-				// ADD EVENT LISTENERS TO MARKER
-
-				marker.addListener('click', clickCallback);
-
-				// RETURN THE MARKER TO THE FUNCTION THAT REQUESTED IT
-
-				return marker;
 
 			},
 

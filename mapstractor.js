@@ -25,6 +25,12 @@
 				/*            on the page, which Mapstractor will  */
 				/*            use as an outer wrapper for the map  */
 				self.mapWrap = document.getElementById(params.mapWrapID);
+
+				// If the map wrapper element doesn't exist, we need to stop and tell the user about the problem.
+				if ( self.mapWrap == null ) {
+					throw new Error('We\'ve got a problem. Mapstractor was told that the ID of the wrapper element is ' + params.mapWrapID + '. There is no element on the page with that ID.');
+				}
+				
 				// Ensure that this wrapper element is relatively positioned.
 				self.mapWrap.style.position = 'relative';
 

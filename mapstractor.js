@@ -64,14 +64,6 @@
 				/*            map.                                 */
 				self.polygons = [];
 
-				/* Variable:  eventIsArtificial                    */
-				/* Type:      Boolean                              */
-				/* Default:   false                                */
-				/* Purpose:   This is a boolean which can be used  */
-				/*            when firing an event to store that   */
-				/*            the event is artificial.             */
-				self.eventIsArtificial = false;
-
 				// CREATE UI WRAPPERS AND OVERLAY
 
 				self._createUIWrappers();

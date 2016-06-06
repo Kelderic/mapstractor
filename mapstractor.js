@@ -75,6 +75,15 @@
 				/*            a marker.                            */
 				self.markerURL = 'markerURL' in params ? params.markerURL : '';
 
+				/* Variable:  mapClickCallback                     */
+				/* Type:      Function                             */
+				/* Default:   function(){}                         */
+				/* Purpose:   This function will be called when    */
+				/*            map itself is clicked. Clicks on     */
+				/*            markers, infoboxes, polygons, etc    */
+				/*            will not trigger it.                 */
+				self.mapClickCallback = 'mapClickCallback' in params ? params.mapClickCallback : function(){};
+
 				// SET UP GLOBAL ARRAYS TO HOLD CURRENT DATA ON THE MAP
 
 				/* Variable:  markers                              */
@@ -110,9 +119,7 @@
 
 				self.gMap.addListener('click', function(){
 					clickingTimout = setTimeout(function(){
-						self.clearMarkers();
-						self.searchInputElement.value = '';
-						document.activeElement.blur();
+						self.mapClickCallback();
 					}, 200);
 				});
 

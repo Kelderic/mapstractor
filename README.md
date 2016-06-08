@@ -12,9 +12,9 @@ To allow for more quickly building out simple Google Maps JS API powered web pag
 - Add KML Layers
 - Add Polygons
 - Add Markers, with or without Infoboxes (Tooltips)
-- Attach Markers to Polygons
-- Add an Autocomplete Searchbox (Text input and button)
+- Add an Searchbox, with Optional Manual Trigger Search Button, Optional Autocomplete, and Optional Search Settings Button
 - Add a Share Location Button
+- Manange Markers, Polygons, and Infoboxes globally
 
 ## Docs
 

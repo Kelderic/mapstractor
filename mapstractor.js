@@ -603,35 +603,6 @@
 
 			},
 
-			updateLocation: function(params) {
-
-				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-				var self = this;
-
-				// SETUP VARIABLES FROM USER-DEFINED PARAMETERS
-
-				/* Variable:  place                                */
-				/* Type:      Custom Google Maps Place Object      */
-				/* Default:   ''                                   */
-				/* Purpose:   This is a Google Maps place object   */
-				/*            that the map will focused on.        */
-				var place = 'place' in params ? params.place : '';
-
-				// ADD NEW MARKER
-
-				self.addMarker({
-					place: place
-				});
-
-				// MOVE THE VIEWPORT OF THE MAP TO THE NEW MARKER
-
-				self.updateViewport({
-					place: place
-				});
-
-			},
-
 			updateViewport: function(params) {
 
 				// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.

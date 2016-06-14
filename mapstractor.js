@@ -766,6 +766,9 @@
 						element.type = type;
 					}
 				}
+				if ( tagName == 'button' ) {
+					element.type = 'button'; 
+				}
 				for (var style in styles) {
 					if (styles.hasOwnProperty(style)) {
 						element.style[style] = styles[style];

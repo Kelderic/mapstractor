@@ -639,7 +639,7 @@
 				// IT ANIMATES THE PAN. )
 
 				self.gMap.panTo(place.geometry.location);
-				self.gMap.setZoom(6);
+				self.gMap.setZoom(zoom);
 
 			},
 

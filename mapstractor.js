@@ -618,6 +618,13 @@
 				/*            that the viewport will focused on.   */
 				var place = 'place' in params ? params.place : '';
 
+				/* Variable:  zoom                                 */
+				/* Type:      Integer                              */
+				/* Default:   6                                    */
+				/* Purpose:   This is the level of zoom that the   */
+				/*            Google map will change to.           */
+				var zoom = 'zoom' in params ? params.zoom : 6;
+
 				// MOVE THE VIEWPORT TO THE SPECIFIED PLACE. ( .fitbounds() IS THE TYPICAL
 				// WAY OF DOING THIS. THIS WAY ALLOWS FOR CONTROL OVER THE ZOOM LEVLEL AND
 				// IT ANIMATES THE PAN. )

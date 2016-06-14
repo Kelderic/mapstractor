@@ -863,20 +863,28 @@
 
 				// GET THE TEXT CONTENT TO USE TO SEARCH FOR.
 
-				var searchText = self.autoCompleteList.firstElementChild.textContent;
+				var searchTextElement = self.autoCompleteList.firstElementChild;
 
-				// USE THE GOOGLE GEOCODER TO SEARCH FOR THE TEXT RETRIEVED ABOVE, AND FROM IT
-				// GET A GOOGLE PLACE CONSTRUCT. RUN THE CALLBACK FUNCTION ON THAT PLACE.
+				if ( searchTextElement ) {
 
-				geocoder.geocode({ 'address': searchText }, function(results, status) {
-					if (status == google.maps.GeocoderStatus.OK) {
-						var place = results[0]; place.name = place.address_components[0].long_name;
-						self.searchInputElement.value = place.formatted_address;
-						placefoundCallback(place);
-					} else {
-						console.log('Geocoding the Place from the autoComplete list failed. The status code is: ' + status);
-					}
-				});
+					// USE THE GOOGLE GEOCODER TO SEARCH FOR THE TEXT RETRIEVED ABOVE, AND FROM IT
+					// GET A GOOGLE PLACE CONSTRUCT. RUN THE CALLBACK FUNCTION ON THAT PLACE.
+
+					geocoder.geocode({ 'address': searchTextElement.textContent }, function(results, status) {
+						if (status == google.maps.GeocoderStatus.OK) {
+							var place = results[0]; place.name = place.address_components[0].long_name;
+							self.searchInputElement.value = place.formatted_address;
+							placefoundCallback(place);
+						} else {
+							console.log('Geocoding the Place from the autoComplete list failed. The status code is: ' + status);
+						}
+					});
+
+				} else {
+
+					console.log('The autocomplete list is empty.');
+
+				}
 
 			},
 

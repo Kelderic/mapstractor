@@ -429,6 +429,15 @@
 						placeholder: 'Search for City, State, or Zip Code...'
 					});
 
+					// PREVENT ENTER KEY FROM SUBMITTING A FORM, IF INPUT IS IN FORM
+
+					searchInputElement.addEventListener('keypress', function(event){
+						var key = event.charCode || event.keyCode || 0;
+						if ( key == 13 ) {
+							event.preventDefault();
+						}
+					}, false);
+
 					// CREATE OFFICIAL GOOGLE API AUTOCOMPLETE CONSTRUCT WITH SEARCH INPUT
 
 					var gSearchBox = new google.maps.places.Autocomplete(searchInputElement, searchOptions);

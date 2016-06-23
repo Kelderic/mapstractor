@@ -804,7 +804,7 @@
 
 				// FIND THE SPECIFIED CONTROL WRAPPER ELEMENT BASED ON PROVIDED LOCATION
 
-				var element = self.gMap.controls[google.maps.ControlPosition[location]].j[0]
+				var element = self.gMap.controls[google.maps.ControlPosition[location]].getAt(0);
 
 				// RETURN THE CONTROL WRAPPER ELEMENT
 

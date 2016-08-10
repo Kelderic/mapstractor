@@ -340,6 +340,15 @@
 				/*            componentRestrictions:{country:'us'} */
 				var searchOptions = 'searchOptions' in params ? params.searchOptions : {};
 
+				/* Variable:  defaultValue                              */
+				/* Type:      String                               */
+				/* Default:   ''                                   */
+				/* Purpose:   This string is the default address   */
+				/*            of the searchbox. It is blank unless */
+				/*            specified. If it is specified, a     */
+				/*            place_changed event is triggered.    */
+				var defaultValue = 'defaultValue' in params ? params.defaultValue : '';
+
 				/* Variable:  showSearchButton                     */
 				/* Type:      Boolean                              */
 				/* Default:   true                                 */
@@ -365,7 +374,15 @@
 				/*            typing in the search box.            */
 				var showAutocompleteList = 'showAutocompleteList' in params ? params.showAutocompleteList : false;
 
-				/* Variable:  placefoundCallback                       */
+				/* Variable:  runDefaultPlaceCallback              */
+				/* Type:      Boolean                              */
+				/* Default:   true                                 */
+				/* Purpose:   This boolean determines whether the  */
+				/*            place found callback should be run   */
+				/*            when the default place is found.     */
+				var runDefaultPlaceCallback = 'runDefaultPlaceCallback' in params ? params.runDefaultPlaceCallback : true;
+
+				/* Variable:  placefoundCallback                   */
 				/* Type:      Function                             */
 				/* Default:   function(){}                         */
 				/* Purpose:   This function is the callback which  */
@@ -473,6 +490,22 @@
 
 							self.autoCompleteList.style['opacity'] = 0;
 							self.autoCompleteList.style['pointer-events'] = 'none';
+
+						}
+
+						// IF DEFAULT IS SPECIFIED, TRIGGER A place_changed EVENT ON THE SEARCHBOX
+						// THIS IS INSIDE OF THE TIMEOUT BECAUSE IT REQUIRES THAT THE self.autoCompletelist
+						// VARIABLE HAS BEEN CREATED.
+
+						if ( defaultValue ) {
+
+							searchInputElement.value = defaultValue;
+
+							if (runDefaultPlaceCallback) {
+
+								google.maps.event.trigger(gSearchBox, 'place_changed');
+
+							}
 
 						}
 
@@ -765,6 +798,7 @@
 					if ( tagName == 'input' ) {
 						element.type = type;
 					}
+
 				}
 				if ( tagName == 'button' ) {
 					element.type = 'button'; 

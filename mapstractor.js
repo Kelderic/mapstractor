@@ -447,7 +447,7 @@
 
 					gSearchBox.addListener('place_changed', function() {
 						var place = gSearchBox.getPlace();
-						if (place.geometry) {
+						if (place && place.geometry) {
 							placefoundCallback(place);
 						} else {
 							self._getPlaceFromAutocompleteSuggestions(placefoundCallback);

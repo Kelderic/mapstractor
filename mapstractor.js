@@ -443,7 +443,7 @@
 						styles: {
 							'flex':'1'
 						},
-						placeholder: 'Search for City, State, or Zip Code...'
+						placeholder: 'Search for address here'
 					});
 
 					// PREVENT ENTER KEY FROM SUBMITTING A FORM, IF INPUT IS IN FORM
@@ -916,14 +916,28 @@
 
 				// GET THE TEXT CONTENT TO USE TO SEARCH FOR.
 
-				var searchTextElement = self.autoCompleteList.firstElementChild;
+				var searchText;
 
-				if ( searchTextElement ) {
+				if ( self.autoCompleteList.firstElementChild ) {
+
+					searchText = self.autoCompleteList.firstElementChild.textContent;
+
+				} else if ( self.searchInputElement.value != '' ) {
+
+					searchText = self.searchInputElement.value;
+
+				} else {
+
+					searchText = '';
+
+				}
+
+				if ( searchText ) {
 
 					// USE THE GOOGLE GEOCODER TO SEARCH FOR THE TEXT RETRIEVED ABOVE, AND FROM IT
 					// GET A GOOGLE PLACE CONSTRUCT. RUN THE CALLBACK FUNCTION ON THAT PLACE.
 
-					geocoder.geocode({ 'address': searchTextElement.textContent }, function(results, status) {
+					geocoder.geocode({ 'address': searchText }, function(results, status) {
 						if (status == google.maps.GeocoderStatus.OK) {
 							var place = results[0]; place.name = place.address_components[0].long_name;
 							self.searchInputElement.value = place.formatted_address;
@@ -935,7 +949,7 @@
 
 				} else {
 
-					console.log('The autocomplete list is empty.');
+					console.log('There is nothing to search for (The searchbox and autocomplete list are both empty.');
 
 				}
 

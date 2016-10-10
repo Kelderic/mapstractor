@@ -105,8 +105,8 @@
 
 			// CREATE UI WRAPPERS AND OVERLAY
 
-			self._createUIWrappers();
-			self._createOverlay();
+			_createUIWrappers(self);
+			_createOverlay(self);
 
 			// ADD CLICK LISTENERS TO THE MAP OBJECT. USE A TIMEOUT TO ENSURE THAT
 			// DOUBLE CLICKS ARE COUNTED.
@@ -206,7 +206,7 @@
 
 			// CREATE A GOOGLE MAPS MARKER OBJECT USING THE PROVIDED PLACE AND OPTIONAL MARKER URL INFO
 
-			var marker = self._createMarker(place, markerURL);
+			var marker = _createMarker(self, place, markerURL);
 
 			// ADD INFOBOX INFORMATION TO MARKER OBJECT
 
@@ -463,7 +463,7 @@
 					if (place && place.geometry) {
 						placefoundCallback(place);
 					} else {
-						self._getPlaceFromAutocompleteSuggestions(placefoundCallback);
+						self.getPlaceFromAutocompleteSuggestions(placefoundCallback);
 					}
 				});
 
@@ -526,7 +526,7 @@
 				// FOR THAT PLACE
 
 				searchButtonElement.addEventListener('click', function(event) {
-					self._getPlaceFromAutocompleteSuggestions(placefoundCallback);
+					self.getPlaceFromAutocompleteSuggestions(placefoundCallback);
 				});
 
 			}
@@ -842,55 +842,7 @@
 
 		};
 
-		/***************************************/
-		/********** PRIVATE FUNCTIONS **********/
-		/***************************************/
-
-		Class.prototype._createUIWrappers = function() {
-
-			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-			var self = this;
-
-			// SET UP OBJECT WITH ALL DESIRED WRAPPER LOCATIONS
-
-			var wrappers = [
-				{position: 'TOP_LEFT', class: 'controls left'},
-				{position: 'LEFT_TOP', class: 'controls left'},
-				{position: 'BOTTOM_LEFT', class: 'controls left'},
-				{position: 'LEFT_BOTTOM', class: 'controls left'},
-				{position: 'TOP_RIGHT', class: 'controls right'},
-				{position: 'RIGHT_TOP', class: 'controls right'},
-				{position: 'BOTTOM_RIGHT', class: 'controls right'},
-				{position: 'RIGHT_BOTTOM', class: 'controls right'},
-			]
-
-			// LOOP THROUGH WRAPPER OBJECT AND CREATE WRAPPER ELEMENTS
-
-			for ( var i=0, l=wrappers.length; i<l; i++ ) {
-				self.gMap.controls[google.maps.ControlPosition[wrappers[i].position]].push(self.createHTML({
-					className: wrappers[i].class
-				}));
-			}
-
-		};
-
-		Class.prototype._createOverlay = function() {
-
-			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-			var self = this;
-
-			// CREATE THE WRAPPER ELEMENT AND PLACE IT ON THE MAP, THEN STORE IT IN A GLOBAL
-
-			self.overlay = self.createHTML({
-				className: 'overlay loading',
-				innerHTML: '<svg></svg><div></div><span>Starting up...</span>'
-			});
-
-		};
-
-		Class.prototype._getPlaceFromAutocompleteSuggestions = function(placefoundCallback) {
+		Class.prototype.getPlaceFromAutocompleteSuggestions = function(placefoundCallback) {
 
 			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 
@@ -951,11 +903,48 @@
 
 		};
 
-		Class.prototype._createMarker = function(place, markerURL) {
 
-			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+		/***************************************/
+		/********** PRIVATE FUNCTIONS **********/
+		/***************************************/
 
-			var self = this;
+		function _createUIWrappers(map) {
+
+			// SET UP OBJECT WITH ALL DESIRED WRAPPER LOCATIONS
+
+			var wrappers = [
+				{position: 'TOP_LEFT', class: 'controls left'},
+				{position: 'LEFT_TOP', class: 'controls left'},
+				{position: 'BOTTOM_LEFT', class: 'controls left'},
+				{position: 'LEFT_BOTTOM', class: 'controls left'},
+				{position: 'TOP_RIGHT', class: 'controls right'},
+				{position: 'RIGHT_TOP', class: 'controls right'},
+				{position: 'BOTTOM_RIGHT', class: 'controls right'},
+				{position: 'RIGHT_BOTTOM', class: 'controls right'},
+			]
+
+			// LOOP THROUGH WRAPPER OBJECT AND CREATE WRAPPER ELEMENTS
+
+			for ( var i=0, l=wrappers.length; i<l; i++ ) {
+				map.gMap.controls[google.maps.ControlPosition[wrappers[i].position]].push(map.createHTML({
+					className: wrappers[i].class
+				}));
+			}
+
+		}
+
+		function _createOverlay(map) {
+
+			// CREATE THE WRAPPER ELEMENT AND PLACE IT ON THE MAP, THEN STORE IT IN A GLOBAL
+
+			map.overlay = map.createHTML({
+				className: 'overlay loading',
+				innerHTML: '<svg></svg><div></div><span>Starting up...</span>'
+			});
+
+		}
+
+		function _createMarker(map, place, markerURL) {
 
 			// SETUP VARIABLES FROM PROVIDED PARAMETERS
 
@@ -980,7 +969,7 @@
 			var options = {
 				title: place.name,
 				position: place.geometry.location,
-				map: self.gMap
+				map: map.gMap
 			}
 
 			// IF WE DO HAVE A CUSTOM MARKER URL, ADD AN ICON OBJECT TO THE OPTIONS OBJECT
@@ -996,7 +985,7 @@
 
 			return new google.maps.Marker(options);
 
-		};
+		}
 
 		return Class;
 

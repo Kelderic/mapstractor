@@ -1003,13 +1003,37 @@
 			}
 
 		};
+
 		return Mapstractor;
+
 	}());
 
+	/***************************************/
+	/********** EXTEND GOOGLE API **********/
+	/***************************************/
+
 	google.maps.Polygon.prototype.getCenter = function(){
-		var bounds = new google.maps.LatLngBounds()
-		this.getPath().forEach(function(element,index){bounds.extend(element)})
+
+		// STORE this AS polygon, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
+		var polygon = this;
+
+		// CREATE GOOGLE MAPS JS API BOUNDS OBJECT THAT CAN BE WRAPPED SO WE CAN USE
+		// BUILD IN getCenter() FUNCTION
+
+		var bounds = new google.maps.LatLngBounds();
+
+		// LOOP THROUGH EVERY POINT IN POLYGON, EXTENDING THE BOUNDS OBJECT TO CONTAIN
+		// EVERY ONE
+
+		polygon.getPath().forEach(function(element,index){
+			bounds.extend(element)
+		});
+
+		// RETURN CENTER OF BOUNDS OJBECT, WHICH IS CENTER OF POLYGON
+
 		return bounds.getCenter();
+
 	}
 
 	google.maps.Marker.prototype.showInfobox = function(){

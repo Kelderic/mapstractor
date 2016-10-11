@@ -507,7 +507,7 @@
 					if (place && place.geometry) {
 						placefoundCallback(place);
 					} else {
-						self.getPlaceFromAutocompleteSuggestions(placefoundCallback);
+						self.getPlaceFromAutocomplete(placefoundCallback);
 					}
 				});
 
@@ -570,7 +570,7 @@
 				// FOR THAT PLACE
 
 				searchButtonElement.addEventListener('click', function(event) {
-					self.getPlaceFromAutocompleteSuggestions(placefoundCallback);
+					self.getPlaceFromAutocomplete(placefoundCallback);
 				});
 
 			}
@@ -785,7 +785,7 @@
 
 		};
 
-		Class.prototype.getPlaceFromAutocompleteSuggestions = function( placefoundCallback ) {
+		Class.prototype.getPlaceFromAutocomplete = function( placefoundCallback ) {
 
 			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 

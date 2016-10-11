@@ -204,9 +204,26 @@
 			/*            a click event.                       */
 			var clickCallback = 'clickCallback' in params ? params.clickCallback : function(){};
 
+			// SET UP THE OPTIONS OBJECT THAT THE GOOGLE JS API MARKER CREATION FUNCTION REQUIRES
+
+			var markerOptions = {
+				title: place.name,
+				position: place.geometry.location,
+				map: self.gMap
+			}
+
+			// IF WE DO HAVE A CUSTOM MARKER URL, ADD AN ICON OBJECT TO THE OPTIONS OBJECT
+
+			if ( markerURL ) {
+				markerOptions.icon = {
+					url: markerURL,
+					scaledSize: new google.maps.Size(50,50)
+				}
+			}
+
 			// CREATE A GOOGLE MAPS MARKER OBJECT USING THE PROVIDED PLACE AND OPTIONAL MARKER URL INFO
 
-			var marker = _createMarker(self, place, markerURL);
+			var marker = new google.maps.Marker(markerOptions);
 
 			// ADD INFOBOX INFORMATION TO MARKER OBJECT
 
@@ -939,49 +956,6 @@
 				innerHTML: '<svg></svg><div></div><span>Starting up...</span>',
 				location: map.mapWrap
 			});
-
-		}
-
-		function _createMarker(map, place, markerURL) {
-
-			// SETUP VARIABLES FROM PROVIDED PARAMETERS
-
-			/* Variable:  place                                */
-			/* Type:      Custom Google Maps Place Object      */
-			/* Default:   N/A                                  */
-			/* Purpose:   This is a Google Maps place object   */
-			/*            that will be used to create a marker */
-			/*            as it's location.                    */
-			place = place;
-
-			/* Variable:  markerURL                            */
-			/* Type:      String                               */
-			/* Default:   N/A                                  */
-			/* Purpose:   This is the URL of the custom image  */
-			/*            that is being used as the default    */
-			/*            marker.                              */
-			markerURL = markerURL;
-
-			// SET UP THE OPTIONS OBJECT THAT THE GOOGLE JS API MARKER CREATION FUNCTION REQUIRES
-
-			var options = {
-				title: place.name,
-				position: place.geometry.location,
-				map: map.gMap
-			}
-
-			// IF WE DO HAVE A CUSTOM MARKER URL, ADD AN ICON OBJECT TO THE OPTIONS OBJECT
-
-			if ( markerURL ) {
-				options.icon = {
-					url:markerURL,
-					scaledSize: new google.maps.Size(50,50)
-				}
-			}
-
-			// CREATE THE MARKER OBJECT AND RETURN IT.
-
-			return new google.maps.Marker(options);
 
 		}
 

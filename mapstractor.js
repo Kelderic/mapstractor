@@ -59,7 +59,7 @@
 			/* Type:      Google Map Object                    */
 			/* Purpose:   This object is the primary Google    */
 			/*            Map object.                          */
-			self.gMap = new google.maps.Map(self.createHTML({styles: {height:'100%'}}), params.mapOptions);
+			self.gMap = new google.maps.Map(_createHTML({styles: {height:'100%'}, location: self.mapWrap}), params.mapOptions);
 			self.gMap.mapstractor = self;
 
 			/* Variable:  markerURL                            */
@@ -396,7 +396,7 @@
 
 			// CREATE THE HTML CONTROL WRAP
 
-			var searchBoxWrapElement = self.createHTML({
+			var searchBoxWrapElement = _createHTML({
 				tagName: 'div',
 				id: 'searchBox',
 				className: 'control',
@@ -414,7 +414,7 @@
 
 				// CREATE HTML ELEMENT FOR THE BUTTON
 
-				var searchSettingsButtonElement = self.createHTML({
+				var searchSettingsButtonElement = _createHTML({
 					tagName:'button',
 					location: searchBoxWrapElement,
 					innerHTML: settingsIcon
@@ -433,7 +433,7 @@
 
 				// CREATE HTML ELEMENT FOR SEARCH INPUT
 
-				var searchInputElement = self.createHTML({
+				var searchInputElement = _createHTML({
 					tagName:'input',
 					location: searchBoxWrapElement,
 					styles: {
@@ -515,7 +515,7 @@
 
 				// CREATE HTML ELEMENT FOR BUTTON
 
-				var searchButtonElement = self.createHTML({
+				var searchButtonElement = _createHTML({
 					tagName:'button',
 					location: searchBoxWrapElement,
 					innerHTML: magnifyingGlassIcon
@@ -584,7 +584,7 @@
 
 			// CREATE THE HTML CONTROL WRAP
 
-			var shareLocationWrapElement = self.createHTML({
+			var shareLocationWrapElement = _createHTML({
 				tagName: 'div',
 				id: 'sharelocation',
 				className: 'control',
@@ -593,7 +593,7 @@
 
 			// CREATE THE HTML CONTROL ELEMENTS
 
-			var shareLocationButtonElement = self.createHTML({
+			var shareLocationButtonElement = _createHTML({
 				tagName: 'button',
 				location: shareLocationWrapElement,
 				innerHTML: locationIcon
@@ -716,107 +716,6 @@
 
 		};
 
-		Class.prototype.createHTML = function(params) {
-
-			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-			var self = this;
-
-			// SETUP VARIABLES FROM PROVIDED PARAMETERS
-
-			/* Variable:  tagName                              */
-			/* Type:      String                               */
-			/* Default:   'div'                                */
-			/* Purpose:   This is the tagName of the element   */
-			/*            that is being created.               */
-			var tagName = 'tagName' in params ? params.tagName : 'div';
-
-			/* Variable:  id                                   */
-			/* Type:      String                               */
-			/* Default:   ''                                   */
-			/* Purpose:   This is the id of the element that   */
-			/*            is being created.                    */
-			var id = 'id' in params ? params.id : '';
-
-			/* Variable:  className                            */
-			/* Type:      String                               */
-			/* Default:   ''                                   */
-			/* Purpose:   This is the list of classes of the   */
-			/*            element that is being created.       */
-			var className = 'className' in params ? params.className : '';
-
-			/* Variable:  type                                 */
-			/* Type:      String                               */
-			/* Default:   '' | 'text'                          */
-			/* Purpose:   This is the type attribute, only     */
-			/*            used if the tagName is 'input'       */
-			var type = 'type' in params ? params.type : ( tagName == 'input' ? 'text' : '' );
-
-			/* Variable:  placeholder                          */
-			/* Type:      String                               */
-			/* Default:   ''                                   */
-			/* Purpose:   This is the placeholder attribute,   */
-			/*            used if the tagName is 'input' or    */
-			/*            textarea.                            */
-			var placeholder = 'placeholder' in params ? params.placeholder : '';
-
-			/* Variable:  style                                */
-			/* Type:      String                               */
-			/* Default:   ''                                   */
-			/* Purpose:   This is an object containing any     */
-			/*            styles that should be hardcoded on   */
-			/*            the element that is being created.   */
-			var styles = 'styles' in params ? params.styles : {};
-
-			/* Variable:  innerHTML                            */
-			/* Type:      String                               */
-			/* Default:   ''                                   */
-			/* Purpose:   This is the HTML content that will   */
-			/*            be placed inside the created element */
-			/*            using .innerHTML().                  */
-			var innerHTML = 'innerHTML' in params ? params.innerHTML : '';
-
-			/* Variable:  location                             */
-			/* Type:      HTML Element                         */
-			/* Default:   self.mapWrap                         */
-			/* Purpose:   This is an HTML element that the new */
-			/*            created element will be appended to. */
-			var location = 'location' in params ? params.location : self.mapWrap;
-
-			// CREATE HTML ELEMENT
-
-			var element = document.createElement(tagName);
-
-			element.id = id;
-			element.className = className;
-			if ( tagName == 'input' || tagName == 'textarea' ) {
-				element.placeholder = placeholder;
-				if ( tagName == 'input' ) {
-					element.type = type;
-				}
-
-			}
-			if ( tagName == 'button' ) {
-				element.type = 'button'; 
-			}
-			for (var style in styles) {
-				if (styles.hasOwnProperty(style)) {
-					element.style[style] = styles[style];
-				}
-			}
-
-			element.innerHTML = innerHTML;
-
-			// ADD ELEMENT TO PAGE
-
-			location.appendChild(element);
-
-			// RETURN THE MARKER TO THE FUNCTION THAT REQUESTED IT
-
-			return element;
-
-		};
-
 		Class.prototype.getControlWrap = function(params) {
 
 			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
@@ -908,6 +807,103 @@
 		/********** PRIVATE FUNCTIONS **********/
 		/***************************************/
 
+		function _createHTML( params ) {
+
+			// SETUP VARIABLES FROM PROVIDED PARAMETERS
+
+			/* Variable:  tagName                              */
+			/* Type:      String                               */
+			/* Default:   'div'                                */
+			/* Purpose:   This is the tagName of the element   */
+			/*            that is being created.               */
+			var tagName = 'tagName' in params ? params.tagName : 'div';
+
+			/* Variable:  id                                   */
+			/* Type:      String                               */
+			/* Default:   ''                                   */
+			/* Purpose:   This is the id of the element that   */
+			/*            is being created.                    */
+			var id = 'id' in params ? params.id : '';
+
+			/* Variable:  className                            */
+			/* Type:      String                               */
+			/* Default:   ''                                   */
+			/* Purpose:   This is the list of classes of the   */
+			/*            element that is being created.       */
+			var className = 'className' in params ? params.className : '';
+
+			/* Variable:  type                                 */
+			/* Type:      String                               */
+			/* Default:   '' | 'text'                          */
+			/* Purpose:   This is the type attribute, only     */
+			/*            used if the tagName is 'input'       */
+			var type = 'type' in params ? params.type : ( tagName == 'input' ? 'text' : '' );
+
+			/* Variable:  placeholder                          */
+			/* Type:      String                               */
+			/* Default:   ''                                   */
+			/* Purpose:   This is the placeholder attribute,   */
+			/*            used if the tagName is 'input' or    */
+			/*            textarea.                            */
+			var placeholder = 'placeholder' in params ? params.placeholder : '';
+
+			/* Variable:  style                                */
+			/* Type:      String                               */
+			/* Default:   ''                                   */
+			/* Purpose:   This is an object containing any     */
+			/*            styles that should be hardcoded on   */
+			/*            the element that is being created.   */
+			var styles = 'styles' in params ? params.styles : {};
+
+			/* Variable:  innerHTML                            */
+			/* Type:      String                               */
+			/* Default:   ''                                   */
+			/* Purpose:   This is the HTML content that will   */
+			/*            be placed inside the created element */
+			/*            using .innerHTML().                  */
+			var innerHTML = 'innerHTML' in params ? params.innerHTML : '';
+
+			/* Variable:  location                             */
+			/* Type:      HTML Element                         */
+			/* Default:   self.mapWrap                         */
+			/* Purpose:   This is an HTML element that the new */
+			/*            created element will be appended to. */
+			var location = 'location' in params ? params.location : null;
+
+			// CREATE HTML ELEMENT
+
+			var element = document.createElement(tagName);
+
+			element.id = id;
+			element.className = className;
+			if ( tagName == 'input' || tagName == 'textarea' ) {
+				element.placeholder = placeholder;
+				if ( tagName == 'input' ) {
+					element.type = type;
+				}
+
+			}
+			if ( tagName == 'button' ) {
+				element.type = 'button'; 
+			}
+			for (var style in styles) {
+				if (styles.hasOwnProperty(style)) {
+					element.style[style] = styles[style];
+				}
+			}
+
+			element.innerHTML = innerHTML;
+
+			// ADD ELEMENT TO PAGE
+
+			location.appendChild(element);
+
+			// RETURN THE MARKER TO THE FUNCTION THAT REQUESTED IT
+
+			return element;
+
+		}
+
 		function _createUIWrappers(map) {
 
 			// SET UP OBJECT WITH ALL DESIRED WRAPPER LOCATIONS
@@ -926,8 +922,9 @@
 			// LOOP THROUGH WRAPPER OBJECT AND CREATE WRAPPER ELEMENTS
 
 			for ( var i=0, l=wrappers.length; i<l; i++ ) {
-				map.gMap.controls[google.maps.ControlPosition[wrappers[i].position]].push(map.createHTML({
-					className: wrappers[i].class
+				map.gMap.controls[google.maps.ControlPosition[wrappers[i].position]].push(_createHTML({
+					className: wrappers[i].class,
+					location: map.mapWrap
 				}));
 			}
 
@@ -937,9 +934,10 @@
 
 			// CREATE THE WRAPPER ELEMENT AND PLACE IT ON THE MAP, THEN STORE IT IN A GLOBAL
 
-			map.overlay = map.createHTML({
+			map.overlay = _createHTML({
 				className: 'overlay loading',
-				innerHTML: '<svg></svg><div></div><span>Starting up...</span>'
+				innerHTML: '<svg></svg><div></div><span>Starting up...</span>',
+				location: map.mapWrap
 			});
 
 		}

@@ -414,7 +414,7 @@
 			/*            typing in the search box.            */
 			var showAutocompleteList = 'showAutocompleteList' in params ? params.showAutocompleteList : false;
 
-			/* Variable:  runDefaultPlaceCallback              */
+			/* Variable:  runDefaultPlaceCallback                   @ToDo ... change to runPlaceFoundCallbackForDefaultValue */
 			/* Type:      Boolean                              */
 			/* Default:   true                                 */
 			/* Purpose:   This boolean determines whether the  */

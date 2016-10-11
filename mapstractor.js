@@ -512,6 +512,7 @@
 				});
 
 				// ADD EVENT LISTENER TO MAP FOR VIEWPORT CHANGE, TO TRIGGER UPDATING THE MAP BOUNDS
+				// THIS HELPS THE AUTOCOMPLETE LIST TO GIVE MORE RELEVANT RESULTS
 
 				self.gMap.addListener('bounds_changed', function() {
 					gSearchBox.setBounds(self.gMap.getBounds());

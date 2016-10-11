@@ -164,7 +164,7 @@
 		/********** PUBLIC FUNCTIONS ***********/
 		/***************************************/
 
-		Class.prototype.addKmlLayer = function(params) {
+		Class.prototype.addKmlLayer = function( params ) {
 
 			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 
@@ -189,7 +189,7 @@
 
 		};
 
-		Class.prototype.addMarker = function(params) {
+		Class.prototype.addMarker = function( params ) {
 
 			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 
@@ -270,7 +270,7 @@
 
 		};
 
-		Class.prototype.addPolygon = function(params) {
+		Class.prototype.addPolygon = function( params ) {
 
 			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 
@@ -339,7 +339,7 @@
 
 		};
 
-		Class.prototype.addSearchbox = function(params) {
+		Class.prototype.addSearchbox = function( params ) {
 
 			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 
@@ -581,7 +581,7 @@
 
 		};
 
-		Class.prototype.addShareLocationButton = function(params) {
+		Class.prototype.addShareLocationButton = function( params ) {
 
 			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 
@@ -685,7 +685,7 @@
 
 		};
 
-		Class.prototype.updateViewport = function(params) {
+		Class.prototype.updateViewport = function( params ) {
 
 			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 
@@ -760,7 +760,7 @@
 
 		};
 
-		Class.prototype.getControlWrap = function(params) {
+		Class.prototype.getControlWrap = function( params ) {
 
 			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 
@@ -785,7 +785,7 @@
 
 		};
 
-		Class.prototype.getPlaceFromAutocompleteSuggestions = function(placefoundCallback) {
+		Class.prototype.getPlaceFromAutocompleteSuggestions = function( placefoundCallback ) {
 
 			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
 

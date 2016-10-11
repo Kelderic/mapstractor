@@ -103,10 +103,37 @@
 			/*            map.                                 */
 			self.polygons = [];
 
-			// CREATE UI WRAPPERS AND OVERLAY
+			// CREATE UI WRAPPERS
 
-			_createUIWrappers(self);
-			_createOverlay(self);
+			// SET UP OBJECT WITH ALL DESIRED WRAPPER LOCATIONS
+
+			var wrappers = [
+				{position: 'TOP_LEFT', class: 'controls left'},
+				{position: 'LEFT_TOP', class: 'controls left'},
+				{position: 'BOTTOM_LEFT', class: 'controls left'},
+				{position: 'LEFT_BOTTOM', class: 'controls left'},
+				{position: 'TOP_RIGHT', class: 'controls right'},
+				{position: 'RIGHT_TOP', class: 'controls right'},
+				{position: 'BOTTOM_RIGHT', class: 'controls right'},
+				{position: 'RIGHT_BOTTOM', class: 'controls right'},
+			]
+
+			// LOOP THROUGH WRAPPER OBJECT AND CREATE WRAPPER ELEMENTS
+
+			for ( var i=0, l=wrappers.length; i<l; i++ ) {
+				self.gMap.controls[google.maps.ControlPosition[wrappers[i].position]].push(_createHTML({
+					className: wrappers[i].class,
+					location: self.mapWrap
+				}));
+			}
+
+			// CREATE LOADING/WORKING OVERLAY
+
+			self.overlay = _createHTML({
+				className: 'overlay loading',
+				innerHTML: '<svg></svg><div></div><span>Starting up...</span>',
+				location: self.mapWrap
+			});
 
 			// ADD CLICK LISTENERS TO THE MAP OBJECT. USE A TIMEOUT TO ENSURE THAT
 			// DOUBLE CLICKS ARE COUNTED.
@@ -918,44 +945,6 @@
 			// RETURN THE MARKER TO THE FUNCTION THAT REQUESTED IT
 
 			return element;
-
-		}
-
-		function _createUIWrappers(map) {
-
-			// SET UP OBJECT WITH ALL DESIRED WRAPPER LOCATIONS
-
-			var wrappers = [
-				{position: 'TOP_LEFT', class: 'controls left'},
-				{position: 'LEFT_TOP', class: 'controls left'},
-				{position: 'BOTTOM_LEFT', class: 'controls left'},
-				{position: 'LEFT_BOTTOM', class: 'controls left'},
-				{position: 'TOP_RIGHT', class: 'controls right'},
-				{position: 'RIGHT_TOP', class: 'controls right'},
-				{position: 'BOTTOM_RIGHT', class: 'controls right'},
-				{position: 'RIGHT_BOTTOM', class: 'controls right'},
-			]
-
-			// LOOP THROUGH WRAPPER OBJECT AND CREATE WRAPPER ELEMENTS
-
-			for ( var i=0, l=wrappers.length; i<l; i++ ) {
-				map.gMap.controls[google.maps.ControlPosition[wrappers[i].position]].push(_createHTML({
-					className: wrappers[i].class,
-					location: map.mapWrap
-				}));
-			}
-
-		}
-
-		function _createOverlay(map) {
-
-			// CREATE THE WRAPPER ELEMENT AND PLACE IT ON THE MAP, THEN STORE IT IN A GLOBAL
-
-			map.overlay = _createHTML({
-				className: 'overlay loading',
-				innerHTML: '<svg></svg><div></div><span>Starting up...</span>',
-				location: map.mapWrap
-			});
 
 		}
 

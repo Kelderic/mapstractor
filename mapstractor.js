@@ -686,6 +686,32 @@
 
 		};
 
+		Class.prototype.addElement = function(params) {
+
+			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
+
+			var self = this;
+
+			// SETUP VARIABLES FROM PROVIDED PARAMETERS
+
+			/* Variable:  element                              */
+			/* Type:      HTMLelement                          */
+			/* Default:   null                                 */
+			/* Purpose:   This is the element that is being    */
+			/*            added to the map.                    */
+			var element = 'element' in params ? params.element : null;
+
+			/* Variable:  location                             */
+			/* Type:      HTML Element                         */
+			/* Default:   self.mapWrap                         */
+			/* Purpose:   This is an HTML element that the new */
+			/*            created element will be appended to. */
+			var location = 'location' in params ? params.location : self.mapWrap;
+
+			location.appendChild(element);
+
+		};
+
 		Class.prototype.updateViewport = function( params ) {
 
 			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.

@@ -465,7 +465,7 @@
 				id: 'searchBox',
 				className: 'control',
 				styles: {
-					'display':' flex',
+					'display': 'flex',
 					'max-width': '100%',
 					'width': '400px'
 				},

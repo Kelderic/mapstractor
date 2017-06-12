@@ -574,7 +574,8 @@
 
 						if (runDefaultPlaceCallback) {
 
-							google.maps.event.trigger(self.searchBox, 'place_changed');
+							google.maps.event.trigger(searchInputElement, 'focus')
+							google.maps.event.trigger(searchInputElement, 'keydown', { keyCode: 13 });
 
 						}
 

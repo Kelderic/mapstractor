@@ -508,7 +508,7 @@
 
 				// PREVENT ENTER KEY FROM SUBMITTING A FORM, IF INPUT IS IN FORM
 
-				searchInputElement.addEventListener('keypress', function(event){
+				searchInputElement.addEventListener('keydown', function(event){
 					var key = event.charCode || event.keyCode || 0;
 					if ( key == 13 ) {
 						event.preventDefault();

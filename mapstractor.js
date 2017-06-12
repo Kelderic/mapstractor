@@ -515,19 +515,29 @@
 					}
 				}, false);
 
+				// WHEN THE USER CLICKS ON THE INPUT AND FOCUSES ON IT, THE AUTOCOMPLETE LIST
+				// SHOULD APPEAR, IF THERE IS TEXT IN THE INPUT. HOWEVER, IF THE GOOGLE THINKS
+				// THE INPUT HASN'T CHANGED SINCE A SEARCH WAS RUN, IT WON'T SHOW THE LIST. THIS
+				// BRIEFLY CHANGES THE VALUE OF THE INPUT SO THAT THE AUTOCOMPLETE LIST ALWAYS SHOWS 
+
+				searchInputElement.addEventListener('focus', function(event){
+					searchInputElement.value = searchInputElement.value + ' ';
+				}, false);
+
 				// CREATE OFFICIAL GOOGLE API AUTOCOMPLETE CONSTRUCT WITH SEARCH INPUT
 
-				var gSearchBox = new google.maps.places.Autocomplete(searchInputElement, searchOptions);
+				self.searchBox = new google.maps.places.SearchBox(searchInputElement, searchOptions);
 
 				// TRIGGER ACTION WHEN A SEARCH IS BEGUN VIA THE place_changed EVENT (CLICKING
 				// AN OPTION FROM THE AUTOCOMPLETE SUGGESTIONS)IS CLICKED
 
-				gSearchBox.addListener('place_changed', function() {
-					var place = gSearchBox.getPlace();
-					if (place && place.geometry) {
+				self.searchBox.addListener('places_changed', function() {
+					var places = self.searchBox.getPlaces();
+					if ( places ) {
+						var place = places[0];
+						searchInputElement.value = place.formatted_address;
 						placefoundCallback(place);
-					} else {
-						self.getPlaceFromAutocomplete(placefoundCallback);
+						self.searchBox.current = place;
 					}
 				});
 
@@ -535,7 +545,7 @@
 				// THIS HELPS THE AUTOCOMPLETE LIST TO GIVE MORE RELEVANT RESULTS
 
 				self.gMap.addListener('bounds_changed', function() {
-					gSearchBox.setBounds(self.gMap.getBounds());
+					self.searchBox.setBounds(self.gMap.getBounds());
 				});
 
 				// STORE THE AUTOCOMPLETE HTML WRAPPER ELEMENT AS A GLOBAL SO
@@ -564,7 +574,7 @@
 
 						if (runDefaultPlaceCallback) {
 
-							google.maps.event.trigger(gSearchBox, 'place_changed');
+							google.maps.event.trigger(self.searchBox, 'place_changed');
 
 						}
 
@@ -591,7 +601,8 @@
 				// FOR THAT PLACE
 
 				searchButtonElement.addEventListener('click', function(event) {
-					self.getPlaceFromAutocomplete(placefoundCallback);
+					google.maps.event.trigger(searchInputElement, 'focus')
+					google.maps.event.trigger(searchInputElement, 'keydown', { keyCode: 13 });
 				});
 
 			}
@@ -805,68 +816,6 @@
 			return element;
 
 		};
-
-		Class.prototype.getPlaceFromAutocomplete = function( placefoundCallback ) {
-
-			// STORE this AS self, SO THAT IT IS ACCESSIBLE IN SUB-FUNCTIONS AND TIMEOUTS.
-
-			var self = this;
-
-			// SETUP VARIABLES FROM PROVIDED PARAMETERS
-
-			/* Variable:  placefoundCallback                   */
-			/* Type:      function                             */
-			/* Default:   N/A                                  */
-			/* Purpose:   This function is the callback which  */
-			/*            is called when the search finds a    */
-			/*            place successfully.                  */
-			placefoundCallback = placefoundCallback;			
-
-			// CREATE A GEOCODER USING GOOGLE JS API
-
-			var geocoder = new google.maps.Geocoder();
-
-			// GET THE TEXT CONTENT TO USE TO SEARCH FOR.
-
-			var searchText;
-
-			if ( self.autoCompleteList.firstElementChild ) {
-
-				searchText = self.autoCompleteList.firstElementChild.textContent;
-
-			} else if ( self.searchInputElement.value != '' ) {
-
-				searchText = self.searchInputElement.value;
-
-			} else {
-
-				searchText = '';
-
-			}
-
-			if ( searchText ) {
-
-				// USE THE GOOGLE GEOCODER TO SEARCH FOR THE TEXT RETRIEVED ABOVE, AND FROM IT
-				// GET A GOOGLE PLACE CONSTRUCT. RUN THE CALLBACK FUNCTION ON THAT PLACE.
-
-				geocoder.geocode({ 'address': searchText }, function(results, status) {
-					if (status == google.maps.GeocoderStatus.OK) {
-						var place = results[0]; place.name = place.address_components[0].long_name;
-						self.searchInputElement.value = place.formatted_address;
-						placefoundCallback(place);
-					} else {
-						console.log('Geocoding the Place from the autoComplete list failed. The status code is: ' + status);
-					}
-				});
-
-			} else {
-
-				console.log('There is nothing to search for (The searchbox and autocomplete list are both empty.');
-
-			}
-
-		};
-
 
 		/***************************************/
 		/********** PRIVATE FUNCTIONS **********/

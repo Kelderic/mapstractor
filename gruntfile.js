@@ -6,6 +6,7 @@ module.exports = function(grunt) {
 		/************ CONFIGURATION ************/
 		/***************************************/
 
+		pkg: grunt.file.readJSON("package.json"),
 		config: {
 			build : 'build',
 			dist : 'dist'
@@ -36,7 +37,10 @@ module.exports = function(grunt) {
 				src: [
 					'**/*',
 				],
-				dest: '<%= path %>'
+				dest: '<%= path %>',
+				rename: function(dest, src) {
+					return '<%= path %>/' + src.replace('mapstractor','mapstractor-' + '<%= pkg.version %>');
+				}
 			}
 		},
 
@@ -60,7 +64,8 @@ module.exports = function(grunt) {
 						cwd: '<%= path %>',
 						src: ['*.css', '!*.min.css'],
 						dest: '<%= path %>',
-						ext: '.min.css'
+						ext: '.min.css',
+						extDot: 'last'
 					}
 				]
 			}
@@ -73,7 +78,8 @@ module.exports = function(grunt) {
 						cwd: '<%= path %>',
 						src: ['*.js', '!*.min.js'],
 						dest: '<%= path %>',
-						ext: '.min.js'
+						ext: '.min.js',
+						extDot: 'last'
 					}
 				]
 			}

@@ -532,12 +532,14 @@
 				// AN OPTION FROM THE AUTOCOMPLETE SUGGESTIONS)IS CLICKED
 
 				self.searchBox.addListener('places_changed', function() {
-					var places = self.searchBox.getPlaces();
-					if ( places ) {
-						var place = places[0];
-						searchInputElement.value = place.formatted_address;
-						placefoundCallback(place);
-						self.searchBox.current = place;
+					if ( searchInputElement.value.replace( ' ', '' ) ) {
+						var places = self.searchBox.getPlaces();
+						if ( places && places.length > 0 ) {
+							var place = places[0];
+							searchInputElement.value = place.formatted_address;
+							placefoundCallback(place);
+							self.searchBox.current = place;
+						}
 					}
 				});
 

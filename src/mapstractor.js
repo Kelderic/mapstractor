@@ -576,8 +576,9 @@
 
 						if (runDefaultPlaceCallback) {
 
-							google.maps.event.trigger(searchInputElement, 'focus')
+							searchInputElement.focus();
 							google.maps.event.trigger(searchInputElement, 'keydown', { keyCode: 13 });
+							searchInputElement.blur();
 
 						}
 
@@ -604,8 +605,9 @@
 				// FOR THAT PLACE
 
 				searchButtonElement.addEventListener('click', function(event) {
-					google.maps.event.trigger(searchInputElement, 'focus')
+					searchInputElement.focus();
 					google.maps.event.trigger(searchInputElement, 'keydown', { keyCode: 13 });
+					searchInputElement.blur();
 				});
 
 			}

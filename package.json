@@ -1,6 +1,6 @@
 {
   "name": "mapstractor",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "devDependencies": {
     "autoprefixer": "^6.5.3",
     "cssnano": "^3.9.1",

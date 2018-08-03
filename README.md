@@ -8,7 +8,7 @@ To allow for more quickly building out simple Google Maps JS API powered web pag
 
 ## Stable Version
 
-v2.4.0
+v2.4.2
 
 ## Functions
 

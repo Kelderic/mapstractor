@@ -16,7 +16,7 @@
 
 			/* Variable:  mapWrapID    !!!OBSOLETE!!!          */
 			/* Type:      String                               */
-			/* Default:   N/A (Required)                       */
+			/* Default:   N/A (Partially Required)             */
 			/* Purpose:   This string is the ID of the HTML    */
 			/*            element which is hardcoded on the    */
 			/*            page and will become the wrapper.    */
@@ -25,14 +25,23 @@
 
 			/* Variable:  mapWrapSelector                      */
 			/* Type:      String                               */
-			/* Default:   N/A (Required)                       */
+			/* Default:   N/A (Partially Required)             */
 			/* Purpose:   This string is the selector that     */
 			/*            Mapstractor will use to identify the */
 			/*            element which is hardcoded on the    */
 			/*            page and will become the wrapper.    */
 			params.mapWrapSelector = 'mapWrapSelector' in params ? params.mapWrapSelector : null;
 
-			if ( params.mapWrapID == null && params.mapWrapSelector == null ) {
+			/* Variable:  mapWrapRef                           */
+			/* Type:      Element                              */
+			/* Default:   N/A (Partially Required)             */
+			/* Purpose:   This is a DOM element reference that */
+			/*            Mapstractor will use to identify the */
+			/*            element which is hardcoded on the    */
+			/*            page and will become the wrapper.    */
+			params.mapWrapRef = 'mapWrapRef' in params ? params.mapWrapRef : null;
+
+			if ( params.mapWrapID == null && params.mapWrapSelector == null && params.mapWrapRef == null ) {
 				throw new Error('We\'ve got a problem. Mapstractor requires a hardcoded element on the page to place the Google map inside. This element needs to be identified by a selector and passed to Mapstractor.');
 			}
 
@@ -55,15 +64,19 @@
 			/*            on the page, which Mapstractor will  */
 			/*            use as an outer wrapper for the map  */
 
-			if ( params.mapWrapSelector == null ) {
+			if ( params.mapWrapID != null ) {
 
 				self.mapWrap = document.getElementById(params.mapWrapID);
 
-			} else {
+			} else if ( params.mapWrapSelector != null ) {
 
 				self.mapWrap = document.querySelector(params.mapWrapSelector);
 
-			}
+			} else {
+
+				self.mapWrap = params.mapWrapRef;
+
+			}	
 
 			// If the map wrapper element doesn't exist, we need to stop and tell the user about the problem.
 			if ( self.mapWrap == null ) {
